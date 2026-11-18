@@ -2,6 +2,8 @@
 
 Premier prototype jouable d’un ARG narratif dans lequel une journaliste du futur explore une clé USB à travers un PC de 2025–2035 reconstitué.
 
+**Jouer en ligne : [orivexapro.github.io/19-42-arg](https://orivexapro.github.io/19-42-arg/)**
+
 ## Jouer
 
 1. Installer Node.js 18 ou plus récent.
