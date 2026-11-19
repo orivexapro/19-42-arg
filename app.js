@@ -2,7 +2,7 @@ import { evaluateReport } from "./evaluator.js";
 import { createPuzzleSuite, fragmentDefinitions } from "./puzzles.js";
 
 const STORAGE_KEY = "arg-19-41-state-v3";
-const defaultState = { notes: "DOSSIER MARIANNE — NOTES D’ENQUÊTE\n\n• ", attempts: [], opened: [], puzzles: {}, fragments: [], usbUnlocked: false, protectedUnlocked: false, narratorEnabled: true, windowLayouts: {}, startedAt: Date.now(), shutdown: false };
+const defaultState = { notes: "DOSSIER MARIANNE — NOTES D’ENQUÊTE\n\n• ", attempts: [], opened: [], puzzles: {}, fragments: [], usbUnlocked: false, protectedUnlocked: false, narratorEnabled: true, tutorialCompleted: false, windowLayouts: {}, startedAt: Date.now(), shutdown: false };
 const state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -13,6 +13,7 @@ let windowCount = 0;
 let puzzles;
 const narratedThisSession = new Set();
 let narratorTimer;
+let tutorialAudio;
 
 const fileSystem = {
   pc: { title: "Ce PC", type: "drives" },
@@ -86,19 +87,43 @@ function boot() {
   if (state.shutdown) { $("#boot").classList.add("hidden"); $("#shutdown-screen").classList.remove("hidden"); return; }
   setTimeout(() => {
     $("#boot").classList.add("hidden"); $("#desktop").classList.remove("hidden");
-    if (!state.usbUnlocked) setTimeout(() => narrate("first-objective", "Bon… première chose : ouvrir Ce PC et retrouver le code de la clé USB. Mes notes dans Documents doivent contenir ce qu’il faut.", { actionLabel: "Ouvrir Documents", action: () => openExplorer("documents"), duration: 14000 }), 450);
+    if (!state.tutorialCompleted) setTimeout(() => openTutorial(), 350);
+    else if (!state.usbUnlocked) setTimeout(() => narrate("first-objective", "Bon… première chose : ouvrir Ce PC et retrouver le code de la clé USB. Mes notes dans Documents doivent contenir ce qu’il faut.", { actionLabel: "Ouvrir Documents", action: () => openExplorer("documents"), duration: 14000 }), 450);
     else setTimeout(() => narrate("return", "La clé est déjà ouverte. Reprenons calmement là où j’en étais."), 450);
   }, 900);
 }
 
-function speakNarration(text) {
-  if (!state.narratorEnabled || !("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text.replace(/…/g, "."));
-  utterance.lang = "fr-FR"; utterance.rate = .96; utterance.pitch = .9; utterance.volume = .82;
-  const voice = speechSynthesis.getVoices().find(item => item.lang?.toLowerCase().startsWith("fr"));
-  if (voice) utterance.voice = voice;
-  speechSynthesis.speak(utterance);
+function openTutorial() {
+  const root = $("#modal-root");
+  root.innerHTML = `<div class="tutorial-backdrop"><section class="tutorial-card" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+    <div class="tutorial-heading"><div><span class="tutorial-kicker">BRIEFING AUDIO · A. MOREL</span><h1 id="tutorial-title">Avant d’ouvrir l’archive</h1></div><span class="tutorial-time">2049</span></div>
+    <p class="tutorial-lead">Vous utilisez le PC reconstitué d’un journaliste pour enquêter sur la disparition de Marianne Dumas.</p>
+    <div class="tutorial-grid">
+      <article><span>01</span><div><strong>Votre rôle</strong><p>Vous êtes A. Morel, journaliste. Cette ancienne machine est le seul moyen de lire une clé USB retrouvée dans des archives parisiennes.</p></div></article>
+      <article><span>02</span><div><strong>Premier objectif</strong><p>Ouvrez <b>Ce PC</b>. La clé E: est verrouillée : ses quatre chiffres se déduisent des fichiers du dossier <b>Documents</b>.</p></div></article>
+      <article><span>03</span><div><strong>Comment explorer</strong><p>Double-cliquez sur les icônes et fichiers. Les fenêtres se déplacent, se réduisent, s’agrandissent et se redimensionnent.</p></div></article>
+      <article><span>04</span><div><strong>Où noter vos découvertes</strong><p>Écrivez noms, heures, anomalies et conclusions dans le <b>Pense-bête</b>. Rien n’est validé avant l’envoi volontaire à la rédaction.</p></div></article>
+    </div>
+    <audio class="tutorial-audio" preload="auto" src="assets/tutorial-intro.mp3"></audio>
+    <div class="tutorial-controls"><button class="secondary tutorial-listen">▶ Écouter le briefing</button><span class="tutorial-audio-status">Voix française masculine · 1 min</span><button class="primary tutorial-start">Commencer l’enquête</button></div>
+  </section></div>`;
+  tutorialAudio = $(".tutorial-audio", root);
+  const listen = $(".tutorial-listen", root);
+  const status = $(".tutorial-audio-status", root);
+  tutorialAudio.muted = !state.narratorEnabled;
+  const syncAudioButton = () => { listen.textContent = tutorialAudio.paused ? (tutorialAudio.currentTime ? "▶ Reprendre" : "▶ Écouter le briefing") : "Ⅱ Pause"; };
+  listen.onclick = () => {
+    if (!state.narratorEnabled) { state.narratorEnabled = true; tutorialAudio.muted = false; save(); $("#narrator-toggle").textContent = "🔊"; }
+    if (tutorialAudio.paused) tutorialAudio.play().then(() => { status.textContent = "A. Morel vous parle…"; syncAudioButton(); }).catch(() => { status.textContent = "Cliquez de nouveau pour lancer l’audio."; });
+    else { tutorialAudio.pause(); syncAudioButton(); }
+  };
+  tutorialAudio.onended = () => { listen.textContent = "↻ Réécouter"; status.textContent = "Briefing terminé"; };
+  tutorialAudio.onpause = syncAudioButton;
+  $(".tutorial-start", root).onclick = () => {
+    tutorialAudio.pause(); tutorialAudio.currentTime = 0; tutorialAudio = null;
+    state.tutorialCompleted = true; save(); root.innerHTML = ""; openExplorer("documents");
+    setTimeout(() => narrate("documents-hint", "Le code combine deux informations. Ouvre les fichiers de ce dossier et note ce qui te paraît utile dans le Pense-bête."), 350);
+  };
 }
 
 function narrate(id, text, { actionLabel = "", action = null, duration = 8500 } = {}) {
@@ -111,7 +136,6 @@ function narrate(id, text, { actionLabel = "", action = null, duration = 8500 } 
   $(".narrator-head button", root).onclick = close;
   if (action) $(".narrator-action", root).onclick = () => { close(); action(); };
   clearTimeout(narratorTimer); narratorTimer = setTimeout(close, duration);
-  speakNarration(text);
 }
 
 function toast(message) {
@@ -273,7 +297,7 @@ function openCalculator() {
   $$(".calc-grid button", win).forEach(b => b.onclick = () => { const k = b.textContent; if (k === "C") expr = ""; else if (k === "⌫") expr = expr.slice(0,-1); else if (k === "±") expr = expr.startsWith("-") ? expr.slice(1) : `-${expr}`; else if (k === "=") { try { const safe = expr.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/,/g,"."); if (!/^[0-9+\-*/.()% ]+$/.test(safe)) throw 0; expr = String(Function(`"use strict";return (${safe})`)()); } catch { expr = "Erreur"; } } else { if (expr === "Erreur") expr = ""; expr += k; } display.value = expr || "0"; });
 }
 
-function openBriefing() { const win = createWindow({ id: "briefing", title: "POINT_DE_DEPART.docx", symbol: "◆", size: "medium", content: `<div class="briefing"><div class="briefing-inner"><div class="eyebrow">Journal d’A. Morel · 17 octobre 2049</div><h1>Pourquoi ce vieux PC ?</h1><p class="quote">« Les archives ne sont jamais neutres. Il faut parfois retrouver la machine qui savait les lire. »</p><p>J’ai mis onze mois à reconstruire cette configuration du début du siècle. Écran plat, clavier physique, système à fenêtres : une absurdité pour mes collègues, une nécessité pour moi.</p><div class="brief-card"><strong>Première étape</strong><p>Déverrouiller la clé USB anonyme. Le code attend quatre chiffres et mes deux notes dans <strong>Documents</strong> décrivent sa construction.</p></div><p>Je dois comprendre qui était Marianne Dumas, ce qui s’est produit chez André Vasseur et pourquoi cette affaire n’existe dans aucun registre.</p><p>Je noterai mes conclusions dans le Pense-bête. Lorsque je serai prêt, je transmettrai mon rapport à la rédaction.</p><button class="primary go-usb">Chercher le code dans Documents</button></div></div>` }); $(".go-usb", win).onclick = () => openExplorer("documents"); }
+function openBriefing() { const win = createWindow({ id: "briefing", title: "POINT_DE_DEPART.docx", symbol: "◆", size: "medium", content: `<div class="briefing"><div class="briefing-inner"><div class="eyebrow">Journal d’A. Morel · 17 octobre 2049</div><h1>Pourquoi ce vieux PC ?</h1><p class="quote">« Les archives ne sont jamais neutres. Il faut parfois retrouver la machine qui savait les lire. »</p><p>J’ai mis onze mois à reconstruire cette configuration du début du siècle. Écran plat, clavier physique, système à fenêtres : une absurdité pour mes collègues, une nécessité pour moi.</p><div class="brief-card"><strong>Première étape</strong><p>Déverrouiller la clé USB anonyme. Le code attend quatre chiffres et mes deux notes dans <strong>Documents</strong> décrivent sa construction.</p></div><p>Je dois comprendre qui était Marianne Dumas, ce qui s’est produit chez André Vasseur et pourquoi cette affaire n’existe dans aucun registre.</p><p>Je noterai mes conclusions dans le Pense-bête. Lorsque je serai prêt, je transmettrai mon rapport à la rédaction.</p><div class="brief-actions"><button class="secondary replay-tutorial">Réécouter le briefing</button><button class="primary go-usb">Chercher le code dans Documents</button></div></div></div>` }); $(".go-usb", win).onclick = () => openExplorer("documents"); $(".replay-tutorial", win).onclick = openTutorial; }
 
 function openAbout() { createWindow({ id: "about", title: "À propos de cette session", symbol: "ⓘ", size: "medium", content: `<div class="document-view"><article class="paper"><div class="doc-kicker">Reconstruction expérimentale</div><h1>ArchiveOS 11</h1><p>Environnement compatible avec les formats grand public 2025–2035. Profil actif : <strong>A. Morel, journaliste</strong>.</p><p>Dernière sauvegarde locale : ${new Date().toLocaleString("fr-FR")}</p><p>Les données de jeu restent dans ce navigateur.</p></article></div>` }); }
 
@@ -292,7 +316,7 @@ function wireDesktop() {
 
 puzzles = createPuzzleSuite({ state, save, createWindow, toast, openExplorer, syncTaskbar, narrate });
 wireDesktop(); syncTaskbar(); boot();
-$("#narrator-toggle").onclick = e => { e.stopPropagation(); state.narratorEnabled = !state.narratorEnabled; save(); $("#narrator-toggle").textContent = state.narratorEnabled ? "🔊" : "🔇"; if (!state.narratorEnabled && "speechSynthesis" in window) speechSynthesis.cancel(); else narrate(`voice-${Date.now()}`, "D’accord. Je garde la voix active.", { duration: 3500 }); };
+$("#narrator-toggle").onclick = e => { e.stopPropagation(); state.narratorEnabled = !state.narratorEnabled; save(); $("#narrator-toggle").textContent = state.narratorEnabled ? "🔊" : "🔇"; if (tutorialAudio) { tutorialAudio.muted = !state.narratorEnabled; if (!state.narratorEnabled) tutorialAudio.pause(); } toast(state.narratorEnabled ? "Briefing vocal activé" : "Briefing vocal coupé"); };
 $("#narrator-toggle").textContent = state.narratorEnabled ? "🔊" : "🔇";
 setTimeout(() => { if (!state.opened.length && !state.attempts.length && !state.shutdown) { toast("Double-cliquez sur « Dossier Marianne » pour commencer."); } }, 1800);
 

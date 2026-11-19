@@ -27,3 +27,15 @@ test("toutes les fenêtres partagent agrandissement, restauration et sauvegarde 
   assert.match(source, /reset-session/);
 });
 
+test("le didacticiel explique le rôle, le premier objectif et le Pense-bête avec un audio dédié", () => {
+  const source = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(source, /assets\/tutorial-intro\.mp3/);
+  assert.match(source, /Votre rôle/);
+  assert.match(source, /Premier objectif/);
+  assert.match(source, /Où noter vos découvertes/);
+  assert.match(source, /Pense-bête/);
+  assert.doesNotMatch(source, /speechSynthesis|SpeechSynthesisUtterance/);
+  const audio = readFileSync(new URL("../assets/tutorial-intro.mp3", import.meta.url));
+  assert.ok(audio.length > 10_000);
+});
+

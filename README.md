@@ -29,7 +29,8 @@ Le même menu propose **Réinitialiser l’enquête**, avec confirmation, pour r
 - fenêtres redimensionnables par leur coin inférieur droit, avec dimensions conservées ;
 - bouton Windows agrandir/rétablir sur toutes les fenêtres et double-clic sur leur barre de titre ;
 - barre des tâches dynamique qui conserve les applications et leur contenu ;
-- voix intérieure facultative et bulles narratives guidant les premières recherches sans afficher de progression ;
+- didacticiel d’ouverture lisible et réécoutable, avec une voix française masculine naturelle préenregistrée (aucune voix robotique du navigateur) ;
+- briefing clair sur le rôle du journaliste, le premier objectif, les gestes Windows et l’usage du Pense-bête ;
 - explorateur de fichiers et clé USB verrouillée par un pavé numérique compatible clavier ;
 - huit énigmes intégrées : code USB, photographie déchirée en douze fragments orientables, message chiffré, jeu des différences, chronologie, analyse audio, fichier corrompu et dossier protégé ;
 - documents, journaux, photographies et enregistrement sonore originaux ;
