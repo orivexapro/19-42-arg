@@ -1,4 +1,4 @@
-# 19:42 — prototype ARG solo
+# 19:41 — prototype ARG solo
 
 Premier prototype jouable d’un ARG narratif dans lequel une journaliste du futur explore une clé USB à travers un PC de 2025–2035 reconstitué.
 
@@ -15,8 +15,8 @@ Aucune installation de dépendance n’est nécessaire. La progression, le pense
 ## Parcours conseillé
 
 - Double-cliquer sur **Ce PC**.
-- Ouvrir la clé **ARCHIVE_M (E:)**.
-- Explorer les documents et résoudre le dossier protégé.
+- Retrouver le code de la clé **ARCHIVE_M (E:)** grâce aux notes présentes sur le PC.
+- Explorer les archives et recouper les manipulations avec les documents.
 - Rédiger librement ses conclusions dans **Pense-bête**.
 - Cliquer sur **Transmettre à la rédaction** pour obtenir un bilan.
 
@@ -24,9 +24,11 @@ Le bouton **Démarrer → Arrêter** sauvegarde et ferme seulement la session : 
 
 ## Fonctionnalités du prototype
 
-- bureau inspiré de Windows 11, menu Démarrer et fenêtres déplaçables ;
-- explorateur de fichiers et clé USB narrative ;
-- documents, journaux, courriels et énigme par code ;
+- bureau inspiré de Windows 11, menu Démarrer et fenêtres déplaçables, réductibles et restaurables ;
+- barre des tâches dynamique qui conserve les applications et leur contenu ;
+- explorateur de fichiers et clé USB verrouillée par un pavé numérique compatible clavier ;
+- huit énigmes intégrées : code USB, photographie déchirée, message chiffré, jeu des différences, chronologie, analyse audio, fichier corrompu et dossier protégé ;
+- documents, journaux, photographies et enregistrement sonore originaux ;
 - calculatrice fonctionnelle ;
 - pense-bête libre avec sauvegarde automatique ;
 - analyse locale tolérant plusieurs formulations et les négations courantes ;
@@ -46,7 +48,7 @@ npm run check
 
 HTML, CSS et JavaScript natifs, sans service payant ni appel à une IA. Le moteur de correction reste volontairement local et transparent dans `evaluator.js` pour ce premier jet.
 
-Le fond d’écran original a été généré spécialement pour ce prototype.
+Les visuels d’archive, le fond d’écran et l’enregistrement sonore ont été créés spécialement pour ce prototype.
 
 ## Avertissement
 

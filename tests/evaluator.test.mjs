@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { evaluateReport } from "../evaluator.js";
 
 test("reconnaît des formulations naturelles", () => {
-  const r = evaluateReport("Marianne est un androïde. Elle a été tuée par André à 19h42. André n'a pas appelé la police.");
+  const r = evaluateReport("Marianne est un androïde. Elle a été tuée par André à 19h41. André n'a pas appelé la police.");
   assert.equal(r.matched.includes("marianne-ai"), true);
   assert.equal(r.matched.includes("murder"), true);
   assert.equal(r.matched.includes("time"), true);

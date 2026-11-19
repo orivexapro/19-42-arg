@@ -1,12 +1,12 @@
 {
   "name": "19-42-arg",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
     "test": "node --test",
-    "check": "node --check app.js && node --check evaluator.js"
+    "check": "node --check app.js && node --check puzzles.js && node --check evaluator.js"
   }
 }
 

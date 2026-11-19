@@ -4,7 +4,7 @@ import { extname, join, normalize } from "node:path";
 
 const port = Number(process.env.PORT || 4173);
 const root = new URL(".", import.meta.url).pathname.replace(/^\/(.:\/)/, "$1");
-const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".svg": "image/svg+xml" };
+const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".wav": "audio/wav" };
 
 createServer(async (req, res) => {
   try {
@@ -18,5 +18,5 @@ createServer(async (req, res) => {
     res.writeHead(404);
     res.end("Introuvable");
   }
-}).listen(port, () => console.log(`19:42 — http://localhost:${port}`));
+}).listen(port, () => console.log(`19:41 — http://localhost:${port}`));
 
