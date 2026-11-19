@@ -1,4 +1,5 @@
-const PHOTO_ORDER = [4, 0, 5, 2, 1, 3];
+const PHOTO_ORDER = [8, 1, 10, 3, 6, 0, 11, 5, 2, 9, 4, 7];
+const PHOTO_ROTATIONS = [1, 0, 3, 2, 1, 3, 2, 0, 3, 1, 2, 1];
 const CHRONOLOGY = ["arrival", "query", "argument", "impact", "silence"];
 const CORRUPT_ORDER = ["f1", "f2", "f3", "f4"];
 
@@ -17,9 +18,22 @@ export function createPuzzleSuite(ctx) {
   state.fragments ||= [];
 
   const complete = (id, message) => {
+    const firstCompletion = !state.puzzles[id];
     state.puzzles[id] = true;
     save();
     if (message) toast(message);
+    if (firstCompletion) {
+      const lines = {
+        usb: "Ça y est. La clé s’ouvre… Voyons ce que quelqu’un a voulu cacher.",
+        photo: "Ah… cette photo a été prise chez André. Et les deux visages ont été anonymisés avant l’archivage.",
+        cipher: "D’accord… ce message ne donne pas une réponse, il donne une méthode.",
+        timeline: "19 h 41. Tout converge vers cette minute.",
+        audio: "A-17… encore ce même secteur. Ce n’est certainement pas une coïncidence.",
+        corrupt: "Une maintenance synchronisée… Ce mot n’a rien à faire dans un rapport de population.",
+        protected: "Cette archive était vraiment faite pour ne pas être ouverte. Restons prudents."
+      };
+      if (lines[id]) ctx.narrate?.(`puzzle-${id}`, lines[id]);
+    }
   };
 
   function openUsbKeypad() {
@@ -72,13 +86,15 @@ export function createPuzzleSuite(ctx) {
   }
 
   function openPhotoPuzzle() {
-    const initial = state.photoOrder || PHOTO_ORDER.slice();
-    const win = createWindow({ id: "puzzle-photo", title: "photo_recuperee.jpg — Reconstruction", symbol: "▧", size: "puzzle-wide", content: `<div class="puzzle-shell photo-puzzle"><header><span>ARCHIVE VISUELLE / 18 RUE DES SAULES</span><h2>Photographie déchirée</h2><p>Faites glisser les fragments. Un clic sur deux fragments permet aussi de les échanger.</p></header><div class="photo-workbench"><div class="photo-grid" role="grid"></div><aside><strong>Table lumineuse</strong><p>Les déchirures suivent une grille de tirage 3 × 2.</p><button class="secondary photo-reset">Mélanger à nouveau</button><div class="puzzle-note"></div></aside></div></div>` });
-    let order = initial.slice(); let selected = null;
+    const initial = state.photoOrder?.length === 12 ? state.photoOrder : PHOTO_ORDER.slice();
+    const initialRotations = state.photoRotations?.length === 12 ? state.photoRotations : PHOTO_ROTATIONS.slice();
+    const win = createWindow({ id: "puzzle-photo", title: "photo_recuperee.jpg — Reconstruction", symbol: "▧", size: "puzzle-wide", content: `<div class="puzzle-shell photo-puzzle"><header><span>ARCHIVE VISUELLE / 18 RUE DES SAULES</span><h2>Photographie déchirée</h2><p>Douze fragments ont été déplacés et tournés. Échangez-les puis corrigez leur orientation.</p></header><div class="photo-workbench"><div class="photo-grid" role="grid"></div><aside><strong>Table lumineuse</strong><p>Cliquez sur deux fragments pour les échanger. Sélectionnez-en un puis utilisez la rotation. Le cadre usé et les lignes de la pièce servent de repères.</p><button class="secondary photo-rotate">↻ Tourner le fragment</button><button class="secondary photo-reset">Recommencer</button><small class="photo-help">Les visages ont été anonymisés dans l’archive originale.</small><div class="puzzle-note"></div></aside></div></div>` });
+    let order = initial.slice(); let rotations = initialRotations.slice(); let selected = null;
     const grid = win.querySelector(".photo-grid");
     const note = win.querySelector(".puzzle-note");
     const render = () => {
-      grid.innerHTML = order.map((tile, position) => `<button class="photo-piece ${selected === position ? "selected" : ""}" draggable="true" data-position="${position}" data-tile="${tile}" style="--col:${tile % 3};--row:${Math.floor(tile / 3)}" aria-label="Fragment ${tile + 1}"></button>`).join("");
+      grid.classList.remove("complete");
+      grid.innerHTML = order.map((tile, position) => `<button class="photo-piece ${selected === position ? "selected" : ""}" draggable="true" data-position="${position}" data-tile="${tile}" aria-label="Fragment ${tile + 1}, rotation ${rotations[position] * 90} degrés"><span style="--col:${tile % 4};--row:${Math.floor(tile / 4)};--rotation:${rotations[position] * 90}deg"></span></button>`).join("");
       grid.querySelectorAll(".photo-piece").forEach(piece => {
         piece.ondragstart = e => e.dataTransfer.setData("text/plain", piece.dataset.position);
         piece.ondragover = e => e.preventDefault();
@@ -95,15 +111,17 @@ export function createPuzzleSuite(ctx) {
           }
         };
       });
-      state.photoOrder = order; save();
-      if (order.every((tile, i) => tile === i)) {
+      state.photoOrder = order; state.photoRotations = rotations; save();
+      if (order.every((tile, i) => tile === i) && rotations.every(value => value === 0)) {
         complete("photo");
         note.innerHTML = `<strong>Image restaurée.</strong><p>Le verso porte une mention au crayon : « André — 18, rue des Saules ».</p>`;
         grid.classList.add("complete");
       }
     };
-    const swap = (a, b) => { [order[a], order[b]] = [order[b], order[a]]; render(); };
-    win.querySelector(".photo-reset").onclick = () => { order = PHOTO_ORDER.slice(); selected = null; render(); };
+    const swap = (a, b) => { [order[a], order[b]] = [order[b], order[a]]; [rotations[a], rotations[b]] = [rotations[b], rotations[a]]; render(); };
+    win.querySelector(".photo-rotate").onclick = () => { if (selected === null) { note.textContent = "Sélectionnez d’abord un fragment."; return; } rotations[selected] = (rotations[selected] + 1) % 4; render(); };
+    win.querySelector(".photo-reset").onclick = () => { order = PHOTO_ORDER.slice(); rotations = PHOTO_ROTATIONS.slice(); selected = null; note.textContent = ""; render(); };
+    ctx.narrate?.("photo-open", "Cette image est plus abîmée que prévu… Les fragments ont aussi été tournés. Le cadre et l’horloge devraient m’aider.");
     render();
   }
 

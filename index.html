@@ -7,6 +7,7 @@
   <title>19:41 — Archives Marianne</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="puzzles.css" />
+  <link rel="stylesheet" href="enhancements.css" />
 </head>
 <body>
   <div id="boot" class="boot-screen">
@@ -25,6 +26,7 @@
     </section>
 
     <section id="window-layer" class="window-layer" aria-live="polite"></section>
+    <aside id="narrator-root" class="narrator-root" aria-live="polite"></aside>
 
     <div id="start-menu" class="start-menu" aria-hidden="true">
       <div class="start-search">⌕&nbsp;&nbsp; Tapez ici pour rechercher</div>
@@ -58,7 +60,7 @@
         <button class="task-icon" data-open="calculator" title="Calculatrice">＋</button>
         <span id="running-apps" class="running-apps" aria-label="Applications ouvertes"></span>
       </div>
-      <div class="tray"><span>⌃</span><span>◉</span><span>⌁</span><span id="clock"><b>19:41</b><small>17/10/2049</small></span></div>
+      <div class="tray"><button id="narrator-toggle" class="narrator-toggle" title="Voix intérieure" aria-label="Activer ou couper la voix intérieure">🔊</button><span>⌃</span><span>◉</span><span>⌁</span><span id="clock"><b>19:41</b><small>17/10/2049</small></span></div>
     </footer>
   </main>
 

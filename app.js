@@ -3,7 +3,7 @@ import { createPuzzleSuite, fragmentDefinitions } from "./puzzles.js";
 
 const STORAGE_KEY = "arg-19-41-state-v2";
 const legacyState = JSON.parse(localStorage.getItem("arg-19-42-state-v1") || "{}");
-const defaultState = { notes: "DOSSIER MARIANNE — NOTES D’ENQUÊTE\n\n• ", attempts: [], opened: [], puzzles: {}, fragments: [], usbUnlocked: false, protectedUnlocked: false, startedAt: Date.now(), shutdown: false };
+const defaultState = { notes: "DOSSIER MARIANNE — NOTES D’ENQUÊTE\n\n• ", attempts: [], opened: [], puzzles: {}, fragments: [], usbUnlocked: false, protectedUnlocked: false, narratorEnabled: true, windowLayouts: {}, startedAt: Date.now(), shutdown: false };
 const state = Object.assign({}, defaultState, legacyState, JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -12,6 +12,8 @@ const layer = $("#window-layer");
 let topZ = 20;
 let windowCount = 0;
 let puzzles;
+const narratedThisSession = new Set();
+let narratorTimer;
 
 const fileSystem = {
   pc: { title: "Ce PC", type: "drives" },
@@ -83,7 +85,34 @@ const docs = {
 
 function boot() {
   if (state.shutdown) { $("#boot").classList.add("hidden"); $("#shutdown-screen").classList.remove("hidden"); return; }
-  setTimeout(() => { $("#boot").classList.add("hidden"); $("#desktop").classList.remove("hidden"); }, 900);
+  setTimeout(() => {
+    $("#boot").classList.add("hidden"); $("#desktop").classList.remove("hidden");
+    if (!state.usbUnlocked) setTimeout(() => narrate("first-objective", "Bon… première chose : ouvrir Ce PC et retrouver le code de la clé USB. Mes notes dans Documents doivent contenir ce qu’il faut.", { actionLabel: "Ouvrir Documents", action: () => openExplorer("documents"), duration: 14000 }), 450);
+    else setTimeout(() => narrate("return", "La clé est déjà ouverte. Reprenons calmement là où j’en étais."), 450);
+  }, 900);
+}
+
+function speakNarration(text) {
+  if (!state.narratorEnabled || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text.replace(/…/g, "."));
+  utterance.lang = "fr-FR"; utterance.rate = .96; utterance.pitch = .9; utterance.volume = .82;
+  const voice = speechSynthesis.getVoices().find(item => item.lang?.toLowerCase().startsWith("fr"));
+  if (voice) utterance.voice = voice;
+  speechSynthesis.speak(utterance);
+}
+
+function narrate(id, text, { actionLabel = "", action = null, duration = 8500 } = {}) {
+  if (narratedThisSession.has(id)) return;
+  narratedThisSession.add(id);
+  const root = $("#narrator-root");
+  root.innerHTML = `<div class="narrator-card"><div class="narrator-head"><span>A. MOREL · PENSÉE</span><button aria-label="Fermer">×</button></div><p>${text}</p>${actionLabel ? `<button class="narrator-action">${actionLabel}</button>` : ""}</div>`;
+  root.classList.add("visible");
+  const close = () => { root.classList.remove("visible"); clearTimeout(narratorTimer); };
+  $(".narrator-head button", root).onclick = close;
+  if (action) $(".narrator-action", root).onclick = () => { close(); action(); };
+  clearTimeout(narratorTimer); narratorTimer = setTimeout(close, duration);
+  speakNarration(text);
 }
 
 function toast(message) {
@@ -107,7 +136,9 @@ function createWindow({ id, title, symbol = "□", size = "", content }) {
   const el = document.createElement("section");
   const offset = (windowCount++ % 7) * 24;
   el.className = `app-window ${size}`; el.dataset.windowId = id; el.dataset.windowTitle = title; el.dataset.windowSymbol = symbol; el.style.left = `${Math.max(10, (innerWidth - Math.min(820, innerWidth - 40)) / 2 + offset - 60)}px`; el.style.top = `${20 + offset}px`; el.style.zIndex = ++topZ;
-  el.innerHTML = `<header class="window-titlebar"><div class="window-title"><span class="app-symbol">${symbol}</span><span>${title}</span></div><div class="window-controls"><button class="min" aria-label="Réduire">—</button><button class="max" aria-label="Agrandir">□</button><button class="close" aria-label="Fermer">×</button></div></header><div class="window-body">${content}</div>`;
+  const savedLayout = state.windowLayouts?.[id];
+  if (savedLayout) { el.style.left = savedLayout.left; el.style.top = savedLayout.top; el.style.width = savedLayout.width; el.style.height = savedLayout.height; }
+  el.innerHTML = `<header class="window-titlebar"><div class="window-title"><span class="app-symbol">${symbol}</span><span>${title}</span></div><div class="window-controls"><button class="min" aria-label="Réduire">—</button><button class="max" aria-label="Agrandir">□</button><button class="close" aria-label="Fermer">×</button></div></header><div class="window-body">${content}</div><span class="resize-corner" aria-hidden="true">↘</span>`;
   layer.append(el); wireWindow(el); focusWindow(el); syncTaskbar();
   // A window can be created from a double-click inside another window. Refocus
   // after that event has finished bubbling so the new window stays in front.
@@ -119,11 +150,19 @@ function wireWindow(el) {
   const bar = $(".window-titlebar", el); let drag = null;
   bar.addEventListener("pointerdown", e => { if (e.target.closest("button") || el.classList.contains("maximized")) return; drag = { x: e.clientX - el.offsetLeft, y: e.clientY - el.offsetTop }; bar.setPointerCapture(e.pointerId); focusWindow(el); });
   bar.addEventListener("pointermove", e => { if (!drag) return; el.style.left = `${Math.max(0, Math.min(innerWidth - 120, e.clientX - drag.x))}px`; el.style.top = `${Math.max(0, e.clientY - drag.y)}px`; });
-  bar.addEventListener("pointerup", () => drag = null);
+  bar.addEventListener("pointerup", () => { drag = null; rememberWindowLayout(el); });
   $(".close", el).onclick = () => { el.dispatchEvent(new CustomEvent("windowclose")); el.remove(); syncTaskbar(); };
   $(".min", el).onclick = () => { el.classList.add("minimized"); el.classList.remove("active"); syncTaskbar(); };
-  $(".max", el).onclick = () => el.classList.toggle("maximized");
+  $(".max", el).onclick = () => { el.classList.toggle("maximized"); rememberWindowLayout(el); };
   el.addEventListener("pointerdown", () => focusWindow(el));
+  const observer = new ResizeObserver(() => { clearTimeout(el.layoutTimer); el.layoutTimer = setTimeout(() => rememberWindowLayout(el), 180); });
+  observer.observe(el); el.addEventListener("windowclose", () => observer.disconnect(), { once: true });
+}
+function rememberWindowLayout(el) {
+  if (!el.isConnected || el.classList.contains("maximized") || el.classList.contains("minimized")) return;
+  state.windowLayouts ||= {};
+  state.windowLayouts[el.dataset.windowId] = { left: el.style.left, top: el.style.top, width: `${el.offsetWidth}px`, height: `${el.offsetHeight}px` };
+  save();
 }
 function focusWindow(el) { $$(".app-window").forEach(w => w.classList.remove("active")); el.classList.add("active"); el.style.zIndex = ++topZ; syncTaskbar(); }
 
@@ -147,6 +186,7 @@ function openExplorer(path = "pc") {
   let win = $(`[data-window-id="explorer"]`);
   if (!win) win = createWindow({ id: "explorer", title: "Explorateur de fichiers", symbol: "▰", content }); else { $(".window-body", win).innerHTML = content; focusWindow(win); }
   win.dataset.currentPath = path; wireExplorer(win);
+  if (path === "documents" && !state.usbUnlocked) narrate("documents-hint", "Voilà. Le code semble combiner deux informations. Il faut lire les notes, pas deviner.");
 }
 
 function wireExplorer(win) {
@@ -219,7 +259,7 @@ function openCalculator() {
   $$(".calc-grid button", win).forEach(b => b.onclick = () => { const k = b.textContent; if (k === "C") expr = ""; else if (k === "⌫") expr = expr.slice(0,-1); else if (k === "±") expr = expr.startsWith("-") ? expr.slice(1) : `-${expr}`; else if (k === "=") { try { const safe = expr.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-").replace(/,/g,"."); if (!/^[0-9+\-*/.()% ]+$/.test(safe)) throw 0; expr = String(Function(`"use strict";return (${safe})`)()); } catch { expr = "Erreur"; } } else { if (expr === "Erreur") expr = ""; expr += k; } display.value = expr || "0"; });
 }
 
-function openBriefing() { const win = createWindow({ id: "briefing", title: "POINT_DE_DEPART.docx", symbol: "◆", size: "medium", content: `<div class="briefing"><div class="briefing-inner"><div class="eyebrow">Journal d’A. Morel · 17 octobre 2049</div><h1>Pourquoi ce vieux PC ?</h1><p class="quote">« Les archives ne sont jamais neutres. Il faut parfois retrouver la machine qui savait les lire. »</p><p>J’ai mis onze mois à reconstruire cette configuration du début du siècle. Écran plat, clavier physique, système à fenêtres : une absurdité pour mes collègues, une nécessité pour moi.</p><div class="brief-card"><strong>Objet reçu</strong><p>Une clé USB anonyme, trouvée dans le lot Paris Nord-Est. Son verrou attend quatre chiffres. Mes deux notes dans <strong>Documents</strong> décrivent la convention.</p></div><p>Je dois comprendre qui était Marianne Dumas, ce qui s’est produit chez André Vasseur et pourquoi cette affaire n’existe dans aucun registre.</p><p>Je noterai mes conclusions dans le Pense-bête. Lorsque je serai prêt, je transmettrai mon rapport à la rédaction.</p><button class="primary go-usb">Ouvrir Ce PC</button></div></div>` }); $(".go-usb", win).onclick = () => openExplorer("pc"); }
+function openBriefing() { const win = createWindow({ id: "briefing", title: "POINT_DE_DEPART.docx", symbol: "◆", size: "medium", content: `<div class="briefing"><div class="briefing-inner"><div class="eyebrow">Journal d’A. Morel · 17 octobre 2049</div><h1>Pourquoi ce vieux PC ?</h1><p class="quote">« Les archives ne sont jamais neutres. Il faut parfois retrouver la machine qui savait les lire. »</p><p>J’ai mis onze mois à reconstruire cette configuration du début du siècle. Écran plat, clavier physique, système à fenêtres : une absurdité pour mes collègues, une nécessité pour moi.</p><div class="brief-card"><strong>Première étape</strong><p>Déverrouiller la clé USB anonyme. Le code attend quatre chiffres et mes deux notes dans <strong>Documents</strong> décrivent sa construction.</p></div><p>Je dois comprendre qui était Marianne Dumas, ce qui s’est produit chez André Vasseur et pourquoi cette affaire n’existe dans aucun registre.</p><p>Je noterai mes conclusions dans le Pense-bête. Lorsque je serai prêt, je transmettrai mon rapport à la rédaction.</p><button class="primary go-usb">Chercher le code dans Documents</button></div></div>` }); $(".go-usb", win).onclick = () => openExplorer("documents"); }
 
 function openAbout() { createWindow({ id: "about", title: "À propos de cette session", symbol: "ⓘ", size: "medium", content: `<div class="document-view"><article class="paper"><div class="doc-kicker">Reconstruction expérimentale</div><h1>ArchiveOS 11</h1><p>Environnement compatible avec les formats grand public 2025–2035. Profil actif : <strong>A. Morel, journaliste</strong>.</p><p>Dernière sauvegarde locale : ${new Date().toLocaleString("fr-FR")}</p><p>Les données de jeu restent dans ce navigateur.</p></article></div>` }); }
 
@@ -235,7 +275,9 @@ function wireDesktop() {
   $("#restart").onclick = () => { state.shutdown = false; save(); $("#shutdown-screen").classList.add("hidden"); $("#desktop").classList.remove("hidden"); };
 }
 
-puzzles = createPuzzleSuite({ state, save, createWindow, toast, openExplorer, syncTaskbar });
+puzzles = createPuzzleSuite({ state, save, createWindow, toast, openExplorer, syncTaskbar, narrate });
 wireDesktop(); syncTaskbar(); boot();
+$("#narrator-toggle").onclick = e => { e.stopPropagation(); state.narratorEnabled = !state.narratorEnabled; save(); $("#narrator-toggle").textContent = state.narratorEnabled ? "🔊" : "🔇"; if (!state.narratorEnabled && "speechSynthesis" in window) speechSynthesis.cancel(); else narrate(`voice-${Date.now()}`, "D’accord. Je garde la voix active.", { duration: 3500 }); };
+$("#narrator-toggle").textContent = state.narratorEnabled ? "🔊" : "🔇";
 setTimeout(() => { if (!state.opened.length && !state.attempts.length && !state.shutdown) { toast("Double-cliquez sur « Dossier Marianne » pour commencer."); } }, 1800);
 

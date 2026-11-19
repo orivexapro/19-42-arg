@@ -25,10 +25,13 @@ Le bouton **Démarrer → Arrêter** sauvegarde et ferme seulement la session : 
 ## Fonctionnalités du prototype
 
 - bureau inspiré de Windows 11, menu Démarrer et fenêtres déplaçables, réductibles et restaurables ;
+- fenêtres redimensionnables par leur coin inférieur droit, avec dimensions conservées ;
 - barre des tâches dynamique qui conserve les applications et leur contenu ;
+- voix intérieure facultative et bulles narratives guidant les premières recherches sans afficher de progression ;
 - explorateur de fichiers et clé USB verrouillée par un pavé numérique compatible clavier ;
-- huit énigmes intégrées : code USB, photographie déchirée, message chiffré, jeu des différences, chronologie, analyse audio, fichier corrompu et dossier protégé ;
+- huit énigmes intégrées : code USB, photographie déchirée en douze fragments orientables, message chiffré, jeu des différences, chronologie, analyse audio, fichier corrompu et dossier protégé ;
 - documents, journaux, photographies et enregistrement sonore originaux ;
+- visages de Marianne et André systématiquement anonymisés dans les archives visuelles ;
 - calculatrice fonctionnelle ;
 - pense-bête libre avec sauvegarde automatique ;
 - analyse locale tolérant plusieurs formulations et les négations courantes ;
