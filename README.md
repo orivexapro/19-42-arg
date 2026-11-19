@@ -21,11 +21,13 @@ Aucune installation de dépendance n’est nécessaire. La progression, le pense
 - Cliquer sur **Transmettre à la rédaction** pour obtenir un bilan.
 
 Le bouton **Démarrer → Arrêter** sauvegarde et ferme seulement la session : il ne termine pas l’enquête.
+Le même menu propose **Réinitialiser l’enquête**, avec confirmation, pour recommencer une partie entièrement vierge.
 
 ## Fonctionnalités du prototype
 
 - bureau inspiré de Windows 11, menu Démarrer et fenêtres déplaçables, réductibles et restaurables ;
 - fenêtres redimensionnables par leur coin inférieur droit, avec dimensions conservées ;
+- bouton Windows agrandir/rétablir sur toutes les fenêtres et double-clic sur leur barre de titre ;
 - barre des tâches dynamique qui conserve les applications et leur contenu ;
 - voix intérieure facultative et bulles narratives guidant les premières recherches sans afficher de progression ;
 - explorateur de fichiers et clé USB verrouillée par un pavé numérique compatible clavier ;

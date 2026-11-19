@@ -18,3 +18,12 @@ test("la photographie utilise douze fragments orientables et une source anonymis
   assert.match(css, /archive-photo-anonymized\.png/);
 });
 
+test("toutes les fenêtres partagent agrandissement, restauration et sauvegarde de taille", () => {
+  const source = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  assert.match(source, /function toggleMaximize/);
+  assert.match(source, /Rétablir la taille précédente/);
+  assert.match(source, /ResizeObserver/);
+  assert.match(source, /arg-19-41-state-v3/);
+  assert.match(source, /reset-session/);
+});
+

@@ -1,10 +1,9 @@
 import { evaluateReport } from "./evaluator.js";
 import { createPuzzleSuite, fragmentDefinitions } from "./puzzles.js";
 
-const STORAGE_KEY = "arg-19-41-state-v2";
-const legacyState = JSON.parse(localStorage.getItem("arg-19-42-state-v1") || "{}");
+const STORAGE_KEY = "arg-19-41-state-v3";
 const defaultState = { notes: "DOSSIER MARIANNE — NOTES D’ENQUÊTE\n\n• ", attempts: [], opened: [], puzzles: {}, fragments: [], usbUnlocked: false, protectedUnlocked: false, narratorEnabled: true, windowLayouts: {}, startedAt: Date.now(), shutdown: false };
-const state = Object.assign({}, defaultState, legacyState, JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
+const state = Object.assign({}, defaultState, JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"));
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -138,7 +137,7 @@ function createWindow({ id, title, symbol = "□", size = "", content }) {
   el.className = `app-window ${size}`; el.dataset.windowId = id; el.dataset.windowTitle = title; el.dataset.windowSymbol = symbol; el.style.left = `${Math.max(10, (innerWidth - Math.min(820, innerWidth - 40)) / 2 + offset - 60)}px`; el.style.top = `${20 + offset}px`; el.style.zIndex = ++topZ;
   const savedLayout = state.windowLayouts?.[id];
   if (savedLayout) { el.style.left = savedLayout.left; el.style.top = savedLayout.top; el.style.width = savedLayout.width; el.style.height = savedLayout.height; }
-  el.innerHTML = `<header class="window-titlebar"><div class="window-title"><span class="app-symbol">${symbol}</span><span>${title}</span></div><div class="window-controls"><button class="min" aria-label="Réduire">—</button><button class="max" aria-label="Agrandir">□</button><button class="close" aria-label="Fermer">×</button></div></header><div class="window-body">${content}</div><span class="resize-corner" aria-hidden="true">↘</span>`;
+  el.innerHTML = `<header class="window-titlebar"><div class="window-title"><span class="app-symbol">${symbol}</span><span>${title}</span></div><div class="window-controls"><button class="min" aria-label="Réduire dans la barre des tâches" title="Réduire">—</button><button class="max" aria-label="Agrandir la fenêtre" title="Agrandir">□</button><button class="close" aria-label="Fermer">×</button></div></header><div class="window-body">${content}</div><span class="resize-corner" aria-hidden="true">↘</span>`;
   layer.append(el); wireWindow(el); focusWindow(el); syncTaskbar();
   // A window can be created from a double-click inside another window. Refocus
   // after that event has finished bubbling so the new window stays in front.
@@ -151,12 +150,27 @@ function wireWindow(el) {
   bar.addEventListener("pointerdown", e => { if (e.target.closest("button") || el.classList.contains("maximized")) return; drag = { x: e.clientX - el.offsetLeft, y: e.clientY - el.offsetTop }; bar.setPointerCapture(e.pointerId); focusWindow(el); });
   bar.addEventListener("pointermove", e => { if (!drag) return; el.style.left = `${Math.max(0, Math.min(innerWidth - 120, e.clientX - drag.x))}px`; el.style.top = `${Math.max(0, e.clientY - drag.y)}px`; });
   bar.addEventListener("pointerup", () => { drag = null; rememberWindowLayout(el); });
+  bar.addEventListener("dblclick", e => { if (!e.target.closest("button")) toggleMaximize(el); });
   $(".close", el).onclick = () => { el.dispatchEvent(new CustomEvent("windowclose")); el.remove(); syncTaskbar(); };
   $(".min", el).onclick = () => { el.classList.add("minimized"); el.classList.remove("active"); syncTaskbar(); };
-  $(".max", el).onclick = () => { el.classList.toggle("maximized"); rememberWindowLayout(el); };
+  $(".max", el).onclick = () => toggleMaximize(el);
   el.addEventListener("pointerdown", () => focusWindow(el));
   const observer = new ResizeObserver(() => { clearTimeout(el.layoutTimer); el.layoutTimer = setTimeout(() => rememberWindowLayout(el), 180); });
   observer.observe(el); el.addEventListener("windowclose", () => observer.disconnect(), { once: true });
+}
+function toggleMaximize(el) {
+  const button = $(".max", el);
+  if (el.classList.contains("maximized")) {
+    el.classList.remove("maximized");
+    const layout = state.windowLayouts?.[el.dataset.windowId];
+    if (layout) { el.style.left = layout.left; el.style.top = layout.top; el.style.width = layout.width; el.style.height = layout.height; }
+    button.textContent = "□"; button.title = "Agrandir"; button.setAttribute("aria-label", "Agrandir la fenêtre");
+  } else {
+    rememberWindowLayout(el);
+    el.classList.add("maximized");
+    button.textContent = "❐"; button.title = "Rétablir la taille"; button.setAttribute("aria-label", "Rétablir la taille précédente");
+  }
+  focusWindow(el);
 }
 function rememberWindowLayout(el) {
   if (!el.isConnected || el.classList.contains("maximized") || el.classList.contains("minimized")) return;
@@ -272,6 +286,7 @@ function wireDesktop() {
   $("#power-button").onclick = e => { e.stopPropagation(); $("#power-menu").classList.toggle("hidden"); };
   $("#power-menu").onclick = e => e.stopPropagation();
   $("#shutdown").onclick = () => { state.shutdown = true; save(); $("#desktop").classList.add("hidden"); $("#shutdown-screen").classList.remove("hidden"); };
+  $("#reset-session").onclick = () => modal({ title: "Recommencer depuis le début ?", text: "Les notes, les énigmes résolues et l’historique de cette partie seront effacés sur cet appareil.", confirm: "Réinitialiser", onConfirm: () => { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem("arg-19-41-state-v2"); localStorage.removeItem("arg-19-42-state-v1"); location.reload(); } });
   $("#restart").onclick = () => { state.shutdown = false; save(); $("#shutdown-screen").classList.add("hidden"); $("#desktop").classList.remove("hidden"); };
 }
 
