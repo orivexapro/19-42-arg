@@ -42,7 +42,7 @@ export function createPuzzleSuite(ctx) {
       title: "ARCHIVE_M (E:) — Accès sécurisé",
       symbol: "▮",
       size: "small keypad-window",
-      content: `<div class="keypad-app"><div class="keypad-led"><small>CODE À 4 CHIFFRES</small><output aria-live="polite">••••</output></div><p>Le support attend le numéro du bâtiment suivi de la minute inscrite sur son étiquette.</p><div class="keypad-grid">${[1,2,3,4,5,6,7,8,9,"⌫",0,"↵"].map(key => `<button data-key="${key}">${key}</button>`).join("")}</div><div class="keypad-status">Lecteur verrouillé</div></div>`
+      content: `<div class="keypad-app"><div class="keypad-led"><small>CODE À 4 CHIFFRES</small><output aria-live="polite">••••</output></div><p>Saisissez le code personnel du support.</p><div class="keypad-grid">${[1,2,3,4,5,6,7,8,9,"⌫",0,"↵"].map(key => `<button data-key="${key}">${key}</button>`).join("")}</div><div class="keypad-status">Lecteur verrouillé</div></div>`
     });
     let code = "";
     let accepted = false;
@@ -50,7 +50,7 @@ export function createPuzzleSuite(ctx) {
     const status = win.querySelector(".keypad-status");
     const render = () => output.textContent = code.padEnd(4, "•");
     const submit = () => {
-      if (code === "1141" && !accepted) {
+      if (code === "2311" && !accepted) {
         accepted = true;
         state.usbUnlocked = true;
         complete("usb", "Le lecteur E: est maintenant accessible.");
@@ -77,7 +77,7 @@ export function createPuzzleSuite(ctx) {
     };
     win.querySelectorAll("[data-key]").forEach(button => button.onclick = () => press(button.dataset.key));
     win._keyHandler = event => {
-      if (!document.body.contains(win) || win.classList.contains("minimized")) return;
+      if (!document.body.contains(win) || win.classList.contains("minimized") || !win.classList.contains("active")) return;
       if (/^\d$/.test(event.key) || event.code.startsWith("Numpad") && /^Numpad\d$/.test(event.code)) press(event.key.match(/\d/)?.[0] || event.code.slice(-1));
       else if (["Enter", "NumpadEnter", "Backspace"].includes(event.key) || event.code === "NumpadEnter") press(event.code === "NumpadEnter" ? "Enter" : event.key);
     };
