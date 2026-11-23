@@ -1,41 +1,41 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { fragmentDefinitions } from "../puzzles.js";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
+import { archiveFiles, magazinePages, emblemTarget, USB_CODE, MATRIX_CODE, MAINTENANCE_CODE, NETWORK, videoArchive } from "../puzzles.js";
 
-test("les quatre fragments forment un document lisible", () => {
-  assert.equal(Object.keys(fragmentDefinitions).length, 4);
-  const restored = ["f1", "f2", "f3", "f4"].map(id => fragmentDefinitions[id].text).join(" ");
-  assert.match(restored, /résidents du secteur.*architecture.*maintenance synchronisée/i);
-});
+const read=(name)=>readFileSync(new URL("../"+name,import.meta.url),"utf8");
+const app=read("app.js"),html=read("index.html"),css=read("game.css"),icons=read("icons.js");
 
-test("la photographie utilise douze fragments orientables et une source anonymisée", () => {
-  const source = readFileSync(new URL("../puzzles.js", import.meta.url), "utf8");
-  const css = readFileSync(new URL("../enhancements.css", import.meta.url), "utf8");
-  const values = source.match(/PHOTO_ORDER = \[([^\]]+)\]/)?.[1].split(",");
-  assert.equal(values?.length, 12);
-  assert.match(source, /PHOTO_ROTATIONS/);
-  assert.match(css, /archive-photo-anonymized\.png/);
-});
-
-test("toutes les fenêtres partagent agrandissement, restauration et sauvegarde de taille", () => {
-  const source = readFileSync(new URL("../app.js", import.meta.url), "utf8");
-  assert.match(source, /function toggleMaximize/);
-  assert.match(source, /Rétablir la taille précédente/);
-  assert.match(source, /ResizeObserver/);
-  assert.match(source, /arg-19-41-state-v3/);
-  assert.match(source, /reset-session/);
-});
-
-test("le didacticiel explique le rôle, le premier objectif et le Pense-bête avec un audio dédié", () => {
-  const source = readFileSync(new URL("../app.js", import.meta.url), "utf8");
-  assert.match(source, /assets\/tutorial-intro\.mp3/);
-  assert.match(source, /Votre rôle/);
-  assert.match(source, /Premier objectif/);
-  assert.match(source, /Où noter vos découvertes/);
-  assert.match(source, /Pense-bête/);
-  assert.doesNotMatch(source, /speechSynthesis|SpeechSynthesisUtterance/);
-  const audio = readFileSync(new URL("../assets/tutorial-intro.mp3", import.meta.url));
-  assert.ok(audio.length > 10_000);
-});
-
+test("le jeu démarre par une introduction animée",()=>{assert.match(html,/intro-canvas/);assert.match(app,/function runIntro/);assert.match(app,/requestAnimationFrame\(draw\)/)});
+test("la cinématique propose plein écran et passage",()=>{assert.match(html,/fullscreen-intro/);assert.match(html,/skip-intro/);assert.match(app,/requestFullscreen/)});
+test("le code USB officiel est 2311 et 1141 a disparu",()=>{assert.equal(USB_CODE,"2311");assert.doesNotMatch(app+read("puzzles.js"),/1141/)});
+test("l’indice USB est le récit naturel du chat au 23 novembre 2024",()=>{assert.match(archiveFiles.catJournal.body.fr,/Le 23 novembre 2024.*petit chat abandonné/s);assert.doesNotMatch(archiveFiles.catJournal.body.fr,/mot de passe|code/i)});
+test("le pavé fonctionne au clavier physique",()=>{assert.match(app,/w\.onkeydown/);assert.match(app,/event\.key|e\.key/);assert.match(app,/USB_CODE/)});
+test("le puzzle du sceau comporte six fragments déplaçables",()=>{assert.equal(emblemTarget.length,6);assert.match(app,/draggable='true'/);assert.match(app,/ondrop/)});
+test("la matrice contient quatre chiffres fixes 2727",()=>{assert.equal(MATRIX_CODE,"2727");assert.match(app,/matrix-code/);assert.match(app,/2&nbsp;&nbsp;&nbsp;7/);assert.match(app,/createStereoPanner/)});
+test("la restauration réseau utilise une configuration datée distincte",()=>{assert.equal(NETWORK.ssid,"A17-CIVIL-2029");assert.match(archiveFiles.routerHistory.body.fr,/2029-10-02/);assert.match(app,/renderQuickPanel/);assert.match(app,/NETWORK\.server/)});
+test("le navigateur simulé possède onglets historique et actualisation",()=>{assert.match(app,/browser-tabs/);assert.match(app,/class='back'/);assert.match(app,/class='forward'/);assert.match(app,/class='reload'/);assert.match(app,/history=/)});
+test("le navigateur ne navigue jamais vers Internet",()=>{assert.doesNotMatch(app,/location\.href|window\.open|fetch\s*\(/);assert.match(app,/browserPage\(url\)/)});
+test("l’URL publique réelle déclenche l’easter egg",()=>{assert.match(app,/orivexapro\\\.github\\\.io/);assert.match(app,/openSecretVideo/)});
+test("le cloud est conditionné au réseau et rassemble les trois sources vidéo",()=>{assert.match(app,/if\(!state\.network\).*openBrowser/);for(const id of ["kitchen","technicianCall","technicianDrop"])assert.match(app,new RegExp(id))});
+test("Télé Hebdomadaire contient huit pages crédibles",()=>{assert.equal(magazinePages.length,8);assert.ok(magazinePages.some(p=>p.kind==="cover"));assert.ok(magazinePages.some(p=>p.kind==="ad"));assert.ok(magazinePages.some(p=>p.kind==="schedule"))});
+test("le programme Regards Croisés cadre 19 h 15 et 19 h 41",()=>{const text=magazinePages.map(p=>p.copy.fr).join(" ");assert.match(text,/19:00 Regards Croisés/);assert.match(text,/20:30/)});
+test("le magazine est feuilletable et zoomable",()=>{assert.match(app,/mag-zoom/);assert.match(app,/class='secondary prev'/);assert.match(app,/class='secondary next'/)});
+test("les archives proposent plusieurs vidéos et la bonne caméra",()=>{assert.equal(videoArchive.length,3);assert.equal(videoArchive.filter(v=>v.relevant).length,1);assert.match(app,/andre-1912/)});
+test("le lecteur commun offre toutes les vitesses demandées",()=>{for(const speed of [".05",".25",".5","1","2"])assert.match(app,new RegExp("value='"+speed.replace(".","\\.")+"'"))});
+test("le lecteur a progression volume plein écran retour et image par image",()=>{for(const token of ["player-progress","class='volume'","class='fullscreen'","class='rewind'","class='step'"])assert.match(app,new RegExp(token))});
+test("luminosité contraste et amplification modifient la lecture",()=>{assert.match(app,/class='amp'/);assert.match(app,/--brightness/);assert.match(app,/--contrast/);assert.match(app,/speakScene\(id,Number/)});
+test("la vidéo CCTV contient réellement le sceau dans ses images",()=>{assert.match(app,/f>=108&&f<=114/);assert.match(app,/fillText\("ANCC"/)});
+test("les vidéos cuisine technicien et objet sont animées",()=>{assert.match(app,/id==="kitchen"/);assert.match(app,/id==="technicianCall"/);assert.match(app,/id==="technicianDrop"/);assert.match(app,/Math\.sin\(f/)});
+test("le code vocal de maintenance est long et cohérent",()=>{assert.equal(MAINTENANCE_CODE,"GOV-A17-7Q4M-1941");assert.match(app,/GOV A17 7Q4M 1941/);assert.match(app,/MAINTENANCE_CODE/)});
+test("onze bascules déverrouillent l’atlas sans compteur visible",()=>{assert.match(app,/state\.airplaneClicks\+\+/);assert.match(app,/state\.airplaneClicks>=11/);assert.doesNotMatch(app,/tap-count|\/ 11/)});
+test("l’atlas est zoomable déplaçable et nomme plusieurs pays réels",()=>{for(const country of ["Honduras","France","China","Jordan"])assert.match(app,new RegExp(country));assert.match(app,/zoom-in/);assert.match(app,/onpointermove/)});
+test("le Honduras ouvre le refus de sortie",()=>{assert.match(app,/openDocument\("passport"\)/);assert.match(archiveFiles.passport.body.fr,/Sujet non autorisé à quitter le périmètre expérimental/)});
+test("la maintenance révèle l’arrêt à 19 h 41 sans secret de saison 2",()=>{assert.match(app,/19:41:06 — arrêt irréversible/);assert.match(app,/SYNTH-H/);assert.doesNotMatch(app,/corps.*(cave|forêt|sous-sol)|fui.*(Honduras|Chine)/i)});
+test("fenêtres barre des tâches réduction restauration et sauvegarde existent",()=>{for(const token of ["createWindow","syncTaskbar","class='min'","class='maxi'","ResizeObserver","state.layouts"])assert.match(app,new RegExp(token))});
+test("calculatrice corbeille paramètres et bloc-notes sont fonctionnels",()=>{for(const fn of ["openCalculator","openTrash","openSettings","openNotes"])assert.match(app,new RegExp("function "+fn));assert.match(app,/state\.notes/)});
+test("les icônes sont de vrais SVG colorés",()=>{assert.match(icons,/<svg/);assert.match(icons,/#f1cc55/);assert.match(icons,/#89979f/);assert.match(icons,/#2d87d2/);assert.match(icons,/#4aa6e4/)});
+test("FR EN et progression persistent sans réinitialisation",()=>{assert.match(app,/state\.lang=state\.lang===/);assert.match(app,/localStorage/);assert.match(app,/STORAGE_KEY/)});
+test("les ressources locales de l’index existent",()=>{for(const name of ["styles.css","game.css","app.js"]){assert.equal(existsSync(new URL("../"+name,import.meta.url)),true)}assert.match(html,/game\.css\?v=2\.0\.0/)});
+test("aucune API payante ou dépendance distante n’est requise",()=>{assert.doesNotMatch(app+html,/openai|stripe|supabase|https:\/\/cdn|apiKey/i)});
+test("la configuration réseau est accessible avant le cloud",()=>{assert.match(app,/matrixUnlocked/);assert.match(app,/openDocument\("routerHistory"\)/);assert.match(app,/if\(!state\.network\)/)});

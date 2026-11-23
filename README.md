@@ -1,62 +1,36 @@
-# 19:41 — prototype ARG solo
+# 19:41 — Saison 1
 
-Premier prototype jouable d’un ARG narratif dans lequel une journaliste du futur explore une clé USB à travers un PC de 2025–2035 reconstitué.
+ARG narratif solo bilingue jouable dans le navigateur. En 2129, un journaliste utilise un ordinateur reconstitué pour enquêter sur la disparition de Marianne Dumas, aide à domicile du quartier expérimental A-17, survenue un siècle plus tôt à 19 h 41.
 
-**Jouer en ligne : [orivexapro.github.io/19-42-arg](https://orivexapro.github.io/19-42-arg/)**
+**Jouer : [orivexapro.github.io/19-42-arg](https://orivexapro.github.io/19-42-arg/)**
 
-## Jouer
+## Expérience intégrée
 
-1. Installer Node.js 18 ou plus récent.
-2. Dans ce dossier, lancer `npm run dev`.
-3. Ouvrir `http://localhost:4173`.
+- introduction animée et transition immersive vers un bureau inspiré des systèmes modernes ;
+- explorateur, bloc-notes sauvegardé, calculatrice, corbeille, paramètres rapides, Wi‑Fi, mode avion, barre des tâches et fenêtres persistantes ;
+- clé USB `2311`, sceau gouvernemental à reconstituer, matrice `2727`, restauration réseau et maintenance confidentielle ;
+- navigateur fictif à onglets et Cloud reconstitué sans accès au véritable Internet ;
+- magazine Télé Hebdomadaire de huit pages, feuilletable et zoomable ;
+- lecteur commun avec progression, volume, plein écran, retour, image par image, vitesse ×0,05 à ×2, amplification, luminosité et contraste ;
+- vidéos animées rétro : arrivée chez André, coupure volontaire, cuisine de Marianne, appel et objet perdu du technicien ;
+- atlas mondial caché après onze bascules du mode avion et dossier Honduras ;
+- rapport final local acceptant différentes formulations françaises et anglaises ;
+- sauvegarde LocalStorage, reprise de partie, aide immersive après inactivité et teaser 19:42 sans révélation réservée.
 
-Aucune installation de dépendance n’est nécessaire. La progression, le pense-bête et l’historique des transmissions sont enregistrés dans le navigateur.
+## Vérifier
 
-## Parcours conseillé
-
-- Double-cliquer sur **Ce PC**.
-- Retrouver le code de la clé **ARCHIVE_M (E:)** grâce aux notes présentes sur le PC.
-- Explorer les archives et recouper les manipulations avec les documents.
-- Rédiger librement ses conclusions dans **Pense-bête**.
-- Cliquer sur **Transmettre à la rédaction** pour obtenir un bilan.
-
-Le bouton **Démarrer → Arrêter** sauvegarde et ferme seulement la session : il ne termine pas l’enquête.
-Le même menu propose **Réinitialiser l’enquête**, avec confirmation, pour recommencer une partie entièrement vierge.
-
-## Fonctionnalités du prototype
-
-- bureau inspiré de Windows 11, menu Démarrer et fenêtres déplaçables, réductibles et restaurables ;
-- fenêtres redimensionnables par leur coin inférieur droit, avec dimensions conservées ;
-- bouton Windows agrandir/rétablir sur toutes les fenêtres et double-clic sur leur barre de titre ;
-- barre des tâches dynamique qui conserve les applications et leur contenu ;
-- didacticiel d’ouverture lisible et réécoutable, avec une voix française masculine naturelle préenregistrée (aucune voix robotique du navigateur) ;
-- briefing clair sur le rôle du journaliste, le premier objectif, les gestes Windows et l’usage du Pense-bête ;
-- explorateur de fichiers et clé USB verrouillée par un pavé numérique compatible clavier ;
-- huit énigmes intégrées : code USB, photographie déchirée en douze fragments orientables, message chiffré, jeu des différences, chronologie, analyse audio, fichier corrompu et dossier protégé ;
-- documents, journaux, photographies et enregistrement sonore originaux ;
-- visages de Marianne et André systématiquement anonymisés dans les archives visuelles ;
-- calculatrice fonctionnelle ;
-- pense-bête libre avec sauvegarde automatique ;
-- analyse locale tolérant plusieurs formulations et les négations courantes ;
-- bilan uniquement après confirmation d’envoi ;
-- questions d’orientation sans révéler les réponses ;
-- reprise de l’enquête et historique des tentatives ;
-- extinction et reprise de session.
-
-## Vérification
+Node.js 18 ou plus récent suffit. Aucune dépendance à installer et aucune API payante.
 
 ```bash
+npm run dev
 npm test
 npm run check
 ```
 
-## Choix techniques
+Le site est statique et déployé par GitHub Actions vers GitHub Pages.
 
-HTML, CSS et JavaScript natifs, sans service payant ni appel à une IA. Le moteur de correction reste volontairement local et transparent dans `evaluator.js` pour ce premier jet.
+## Commercialisation
 
-Les visuels d’archive, le fond d’écran et l’enregistrement sonore ont été créés spécialement pour ce prototype.
+Le prototype ne contient volontairement ni paiement ni authentification. Une future commercialisation doit placer les fichiers protégés et la vérification des droits derrière un serveur (par exemple Supabase avec règles d’accès et Stripe Checkout). Un contrôle uniquement exécuté dans le navigateur ne constitue pas une protection commerciale.
 
-## Avertissement
-
-Windows est une marque de Microsoft. Ce projet est une œuvre fictionnelle indépendante et n’utilise aucun code ni aucune ressource officielle de Windows.
-
+Le dépôt public expose nécessairement les codes, les réponses, les documents et les dialogues dans les sources. Avant toute vente, le dépôt devrait devenir privé ou ne conserver qu’un client dépourvu des contenus protégés ; les secrets de la saison 2 ne doivent jamais être ajoutés à cette branche publique.

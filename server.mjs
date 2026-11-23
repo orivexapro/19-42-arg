@@ -1,9 +1,10 @@
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const port = Number(process.env.PORT || 4173);
-const root = new URL(".", import.meta.url).pathname.replace(/^\/(.:\/)/, "$1");
+const root = fileURLToPath(new URL(".", import.meta.url));
 const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".wav": "audio/wav" };
 
 createServer(async (req, res) => {
@@ -18,5 +19,5 @@ createServer(async (req, res) => {
     res.writeHead(404);
     res.end("Introuvable");
   }
-}).listen(port, () => console.log(`19:41 — http://localhost:${port}`));
+}).listen(port, "127.0.0.1", () => console.log(`19:41 — http://127.0.0.1:${port}`));
 

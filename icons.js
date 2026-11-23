@@ -1,0 +1,17 @@
+const svg=(body,view="0 0 64 64")=>"<svg aria-hidden='true' viewBox='"+view+"' xmlns='http://www.w3.org/2000/svg'>"+body+"</svg>";
+export const icons={
+  folder:svg("<path fill='#f5c957' d='M5 15h22l6 7h26v31H5z'/><path fill='#ffdc76' d='M5 23h54l-6 30H5z'/><path fill='#ba7d22' d='M10 29h38v4H10z'/>") ,
+  notes:svg("<rect x='12' y='7' width='42' height='51' rx='5' fill='#f1cc55'/><path d='M21 19h25M21 28h25M21 37h20M21 46h16' stroke='#7a5a18' stroke-width='3'/><path d='M17 5v8M28 5v8M39 5v8M50 5v8' stroke='#ece7d8' stroke-width='4'/>") ,
+  usb:svg("<path fill='#89979f' d='M25 6h22v17h6v26c0 6-5 10-10 10H21c-6 0-10-4-10-10V23h14z'/><path fill='#d7e0e4' d='M29 10h14v15H29z'/><rect x='20' y='32' width='26' height='15' rx='3' fill='#5e6b72'/><circle cx='33' cy='40' r='4' fill='#b9c6cc'/>") ,
+  browser:svg("<circle cx='32' cy='32' r='27' fill='#2d87d2'/><path fill='#f6d15a' d='M8 31c8-13 23-20 39-14l-8 13c-7-2-13 0-17 6z'/><circle cx='33' cy='34' r='11' fill='#dcefff'/><circle cx='33' cy='34' r='5' fill='#1d679f'/>") ,
+  cloud:svg("<path fill='#4aa6e4' d='M17 49h32c8 0 13-5 13-12 0-8-6-13-14-13-3-9-11-15-21-13-8 1-14 8-14 17C6 29 2 34 3 40c1 6 6 9 14 9z'/><path fill='#f7d359' d='M18 39h34v10H18z'/>") ,
+  magazine:svg("<rect x='10' y='5' width='44' height='54' rx='3' fill='#b42f45'/><rect x='15' y='11' width='34' height='14' fill='#ffe8bd'/><text x='32' y='22' text-anchor='middle' font-size='10' font-weight='700' fill='#9b2637'>TÉLÉ</text><path d='M16 32h18v20H16z' fill='#efad55'/><path d='M38 32h10M38 38h10M38 44h10M38 50h10' stroke='#ffe7ca' stroke-width='2'/>") ,
+  camera:svg("<rect x='8' y='18' width='39' height='31' rx='5' fill='#4bb27a'/><circle cx='28' cy='34' r='11' fill='#183d2d'/><circle cx='28' cy='34' r='6' fill='#91e1b1'/><path fill='#72ce94' d='M47 27l13-7v27l-13-7z'/>") ,
+  video:svg("<rect x='6' y='11' width='52' height='42' rx='6' fill='#4b92d1'/><path fill='#eef8ff' d='M26 22l19 10-19 10z'/><path d='M12 17h7M45 17h7M12 47h7M45 47h7' stroke='#f1c751' stroke-width='4'/>") ,
+  report:svg("<path fill='#d9e0e3' d='M13 5h28l11 11v43H13z'/><path fill='#8da0aa' d='M41 5v13h11z'/><path d='M21 29l7 7 15-16M21 44h24' stroke='#278d76' stroke-width='4' fill='none'/>") ,
+  calculator:svg("<rect x='12' y='5' width='40' height='54' rx='6' fill='#414d58'/><rect x='18' y='11' width='28' height='11' rx='2' fill='#b5e7db'/><g fill='#dce4e7'><rect x='18' y='29' width='7' height='7'/><rect x='29' y='29' width='7' height='7'/><rect x='18' y='40' width='7' height='7'/><rect x='29' y='40' width='7' height='7'/></g><rect x='40' y='29' width='6' height='18' fill='#f0b94b'/>") ,
+  trash:svg("<path fill='#cbd5da' d='M16 17h32l-3 41H19z'/><path fill='#8a9aa3' d='M12 12h40v7H12zM24 6h16v6H24z'/><path d='M26 26v23M38 26v23' stroke='#75868e' stroke-width='3'/>") ,
+  settings:svg("<circle cx='32' cy='32' r='12' fill='#dce7ec'/><path fill='#7c909c' d='M28 3h8l3 9 9-4 6 6-4 9 9 3v9l-9 3 4 9-6 6-9-4-3 9h-8l-3-9-9 4-6-6 4-9-9-3v-9l9-3-4-9 6-6 9 4z'/><circle cx='32' cy='32' r='8' fill='#30414b'/>") ,
+  pdf:svg("<path fill='#e6e9eb' d='M12 4h28l12 12v44H12z'/><path fill='#c92f42' d='M12 40h40v15H12z'/><text x='32' y='51' text-anchor='middle' font-size='11' font-weight='700' fill='white'>PDF</text>") ,
+  audio:svg("<path fill='#956bd3' d='M18 39h9l15 13V12L27 25h-9z'/><path d='M47 25c7 5 7 14 0 19M51 19c12 9 12 22 0 31' stroke='#d9c7fa' stroke-width='3' fill='none'/>")
+};

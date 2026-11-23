@@ -1,204 +1,54 @@
-const PHOTO_ORDER = [8, 1, 10, 3, 6, 0, 11, 5, 2, 9, 4, 7];
-const PHOTO_ROTATIONS = [1, 0, 3, 2, 1, 3, 2, 0, 3, 1, 2, 1];
-const CHRONOLOGY = ["arrival", "query", "argument", "impact", "silence"];
-const CORRUPT_ORDER = ["f1", "f2", "f3", "f4"];
+export const USB_CODE = "2311";
+export const MATRIX_CODE = "2727";
+export const MAINTENANCE_CODE = "GOV-A17-7Q4M-1941";
+export const NETWORK = { ssid: "A17-CIVIL-2029", server: "10.19.41.27", key: "NOV-2029-MARIANNE-DELTA" };
 
-export const fragmentDefinitions = {
-  f1: { label: "fragment_01.tmp", text: "Les résidents du secteur" },
-  f2: { label: "cache_7A.bin", text: "partagent une architecture" },
-  f3: { label: "ligne_184.rec", text: "et reçoivent chaque nuit" },
-  f4: { label: "fin_document.dat", text: "une maintenance synchronisée." }
+const bilingual = (fr, en) => ({ fr, en });
+
+export const archiveFiles = {
+  briefing: { type: "personal", title: bilingual("NOTE_DE_REPRISE.txt", "RECOVERY_NOTE.txt"), body: bilingual("Je suis A. Morel, journaliste, en 2129. Onze mois ont été nécessaires pour reconstruire ce poste à partir d’un lot de pièces retrouvé sous Paris. La clé grise appartenait à Marianne Dumas, disparue un siècle plus tôt dans le secteur A-17. Je dois recouper chaque preuve avant de transmettre quoi que ce soit.", "I am A. Morel, a journalist in 2129. Rebuilding this machine from a parts cache beneath Paris took eleven months. The grey drive belonged to Marianne Dumas, who vanished a century ago in sector A-17. Every piece of evidence must be cross-checked before transmission.") },
+  catJournal: { type: "personal", title: bilingual("journal_personnel_extrait.txt", "personal_journal_excerpt.txt"), body: bilingual("Le 23 novembre 2024, en rentrant du travail, j’ai trouvé un petit chat abandonné dans une ruelle. Depuis ce jour, je ne me sens plus vraiment seule. C’est probablement le plus beau jour de ma vie.\n\nJe l’ai appelé Pixel. Il dort contre la vieille clé grise posée près de mon lit, comme s’il montait la garde.", "On 23 November 2024, walking home from work, I found a small abandoned cat in an alley. Since that day, I no longer feel truly alone. It is probably the happiest day of my life.\n\nI named him Pixel. He sleeps against the old grey drive beside my bed, as if standing guard.") },
+  testimony: { type: "police", title: bilingual("PV_TEMOIN_LEROY_2030.pdf", "WITNESS_LEROY_2030.pdf"), body: bilingual("PRÉFECTURE CIVILE DE PARIS — Dossier PX-A17-1941\nDéposition de Camille Leroy, voisin du 18 rue des Saules.\n\n« Le 18 octobre 2029, vers le début de la soirée, j’ai entendu Marianne et André se disputer. La télévision couvrait presque leurs voix. J’ai reconnu le générique de Regards Croisés : André ne ratait jamais cette émission. Un peu après, il y a eu un choc très lourd, puis plus rien. »\n\nLe témoin se souvient du programme, mais pas de l’heure exacte. Déposition signée le 20/10/2029.", "PARIS CIVIL PREFECTURE — File PX-A17-1941\nStatement by Camille Leroy, neighbour of 18 Rue des Saules.\n\n“On 18 October 2029, early in the evening, I heard Marianne and André arguing. The television nearly covered their voices. I recognised the opening music of Crossed Views: André never missed that programme. A little later there was a very heavy impact, then silence.”\n\nThe witness remembers the programme, but not the exact time. Statement signed 20 October 2029.") },
+  police: { type: "police", title: bilingual("RAPPORT_DISPARITION_MD56.pdf", "MD56_MISSING_REPORT.pdf"), body: bilingual("PRÉFECTURE CIVILE DE PARIS\nRÉF. PX-A17-1941 — CONFIDENTIEL\n\nPersonne disparue : Marianne Dumas, 56 ans, aide à domicile.\nDernier rendez-vous : André Vasseur, 78 ans, 18 rue des Saules, 18/10/2029 à 19 h 15.\nAucun appel aux secours. Aucun signalement de décès. André Vasseur absent de son domicile lors de la visite du 19 octobre.\n\nLe corps de Marianne n’a pas été retrouvé. La destination d’André demeure inconnue.\n\nVisa : Cmdt. É. Mercier", "PARIS CIVIL PREFECTURE\nREF. PX-A17-1941 — CONFIDENTIAL\n\nMissing person: Marianne Dumas, 56, home-care worker.\nLast appointment: André Vasseur, 78, 18 Rue des Saules, 18 October 2029 at 19:15.\nNo emergency call. No death report. André Vasseur was absent when officers visited on 19 October.\n\nMarianne’s body has not been found. André’s destination remains unknown.\n\nSigned: Cmdr. E. Mercier") },
+  identities: { type: "admin", title: bilingual("FICHES_IDENTITE_A17.pdf", "A17_IDENTITY_RECORDS.pdf"), body: bilingual("MARIANNE DUMAS — apparence 56 ans — aide à domicile — dossier créé en bloc le 04/04/2013.\nANDRÉ VASSEUR — apparence 78 ans — retraité — dossier créé en bloc le 04/04/2013.\n\nAnomalie commune : aucune naissance numérisée, aucune photographie antérieure à 2013, fréquences physiologiques d’une régularité impossible.", "MARIANNE DUMAS — apparent age 56 — home-care worker — file batch-created 4 April 2013.\nANDRÉ VASSEUR — apparent age 78 — retired — file batch-created 4 April 2013.\n\nShared anomaly: no digitised birth, no photograph before 2013, impossibly regular physiological readings.") },
+  routerHistory: { type: "technical", title: bilingual("historique_routeurs_A17.csv", "A17_router_history.csv"), body: bilingual("2018-06-14 | A17-LEGACY | 10.19.18.9 | retiré\n2024-11-23 | A17-QUARANTINE | 10.23.11.4 | retiré\n2029-10-02 | A17-CIVIL-2029 | 10.19.41.27 | actif\n\nClé scellée de la configuration active : NOV-2029-MARIANNE-DELTA", "2018-06-14 | A17-LEGACY | 10.19.18.9 | retired\n2024-11-23 | A17-QUARANTINE | 10.23.11.4 | retired\n2029-10-02 | A17-CIVIL-2029 | 10.19.41.27 | active\n\nSealed key for active configuration: NOV-2029-MARIANNE-DELTA") },
+  diary: { type: "personal", title: bilingual("journal_de_Marianne.txt", "Marianne_diary.txt"), body: bilingual("Il y a onze mois, je devais prendre l’avion pour le Honduras. Malheureusement, mon passeport a été refusé. J’aurais tellement aimé découvrir ce pays.\n\nDepuis quelque temps mes souvenirs se répètent. Les dossiers d’André et le mien portent la même lettre H. Je pensais à une erreur administrative, mais le technicien a laissé tomber une carte portant le même symbole que les documents interdits.", "Eleven months ago, I was supposed to fly to Honduras. Unfortunately, my passport was rejected. I would have loved to discover that country.\n\nLately my memories have been repeating. André’s file and mine carry the same H. I thought it was an administrative mistake, but the technician dropped a card bearing the same symbol as the forbidden documents.") },
+  quarantine: { type: "government", title: bilingual("ARRETE_QUARANTAINE_A17.pdf", "A17_QUARANTINE_ORDER.pdf"), body: bilingual("AGENCE NATIONALE DE CONTINUITÉ CIVILE\nClassification : RESTREINT\n\nMotif public : risque sanitaire indéterminé.\nMesure : maintien du secteur A-17 en quarantaine, filtrage des communications, contrôle des déplacements.\n\nAnnexe technique : la justification sanitaire demeure adaptée à l’enveloppe sociale. Le protocole expérimental et ses objectifs finaux sont caviardés.", "NATIONAL CIVIL CONTINUITY AGENCY\nClassification: RESTRICTED\n\nPublic rationale: undetermined health risk.\nMeasure: maintain sector A-17 quarantine, filter communications, control movement.\n\nTechnical annex: the health rationale remains suitable for the social envelope. The experimental protocol and its final objectives are redacted.") },
+  government: { type: "government", title: bilingual("NOTE_SURVEILLANCE_MD56.pdf", "MD56_SURVEILLANCE_NOTE.pdf"), body: bilingual("AGENCE NATIONALE DE CONTINUITÉ CIVILE — Cellule H\nSujet MD-56-H : montée d’incohérences autobiographiques. Surveillance renforcée autorisée.\nSujet AV-78-H : stabilité sociale nominale.\n\n18/10/2029 — 19:15: entrée MD-56-H au domicile AV-78-H.\n19:18: suspension manuelle du canal vidéo extérieur, ordre GOV-CAM-17.\nMotif : [CAVIARDÉ].\n\nLa suspension est intentionnelle. Sa finalité n’est pas incluse dans cette archive.", "NATIONAL CIVIL CONTINUITY AGENCY — H Unit\nSubject MD-56-H: rising autobiographical inconsistencies. Enhanced monitoring authorised.\nSubject AV-78-H: nominal social stability.\n\n18 October 2029 — 19:15: MD-56-H enters AV-78-H residence.\n19:18: manual suspension of external video channel, order GOV-CAM-17.\nReason: [REDACTED].\n\nThe suspension is intentional. Its purpose is not included in this archive.") },
+  passport: { type: "government", title: bilingual("REFUS_SORTIE_MD56.pdf", "MD56_EXIT_DENIAL.pdf"), body: bilingual("AGENCE NATIONALE DE CONTINUITÉ CIVILE\nDÉCISION HN-11 / MD-56-H\n\nDemande de déplacement : Honduras.\nDécision : refus administratif définitif.\nSujet non autorisé à quitter le périmètre expérimental.\nMotif détaillé : [CAVIARDÉ].\n\nValidation : Direction du confinement civil.", "NATIONAL CIVIL CONTINUITY AGENCY\nDECISION HN-11 / MD-56-H\n\nTravel request: Honduras.\nDecision: final administrative denial.\nSubject not authorised to leave the experimental perimeter.\nDetailed reason: [REDACTED].\n\nApproved: Civil Containment Directorate.") }
 };
 
-const escapeHtml = (value) => String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+export const magazinePages = [
+  { kind:"cover", date:"SEMAINE DU 14 AU 20 OCTOBRE 2029", title:bilingual("Télé Hebdomadaire","Weekly Television"), lead:bilingual("Le grand retour des soirées parisiennes","Paris evenings return"), copy:bilingual("Programmes, entretiens, jeux, cinéma et vie pratique. 2,90 € — N° 2841.","Programmes, interviews, games, cinema and practical life. €2.90 — No. 2841.") },
+  { kind:"article", date:"PORTRAIT", title:bilingual("Une ville à hauteur d’humain","A city on a human scale"), lead:bilingual("Les quartiers autonomes changent le quotidien","Autonomous districts change daily life"), copy:bilingual("Transports, soins à domicile et commerces de proximité : rencontre avec celles et ceux qui font vivre le nord-est parisien.","Transport, home care and local shops: meeting the people who keep north-east Paris alive.") },
+  { kind:"ad", date:"PUBLICITÉ", title:bilingual("MINITELLE 30","MINITELLE 30"), lead:bilingual("Toute votre maison, simplement","Your whole home, made simple"), copy:bilingual("Le nouveau téléviseur à contraste adaptatif. Image nette, son enveloppant, veille intelligente. Disponible chez Électro-Saules.","The new adaptive-contrast television. Sharp picture, surrounding sound, intelligent standby. Available at Electro-Saules.") },
+  { kind:"schedule", date:"VENDREDI 18 OCTOBRE", title:bilingual("Les programmes du soir","Evening programmes"), lead:bilingual("Chaînes 1 à 3","Channels 1 to 3"), copy:bilingual("CANAL 1 — 18:30 Journal régional · 19:00 Regards Croisés · 20:30 Le Grand Jeu\nCANAL 2 — 18:55 Météo Paris · 19:10 Cuisine simple · 19:45 Ligne de nuit\nCANAL 3 — 18:40 Questions de santé · 19:20 Ciné-club · 21:05 Actualités du monde","CHANNEL 1 — 18:30 Regional News · 19:00 Crossed Views · 20:30 The Big Game\nCHANNEL 2 — 18:55 Paris Weather · 19:10 Simple Cooking · 19:45 Night Line\nCHANNEL 3 — 18:40 Health Questions · 19:20 Film Club · 21:05 World News") },
+  { kind:"feature", date:"REGARDS CROISÉS", title:bilingual("Deux générations, une ville","Two generations, one city"), lead:bilingual("Vendredi, 19 h — 20 h 30","Friday, 19:00 — 20:30"), copy:bilingual("Le magazine de société reçoit des habitants de tous âges. Générique : quatre notes de piano suivies d’un battement sourd.","The current-affairs programme welcomes residents of every age. Theme: four piano notes followed by a low beat.") },
+  { kind:"article", date:"VIE PRATIQUE", title:bilingual("Bien vivre sa quarantaine","Living well in quarantine"), lead:bilingual("Les services restent disponibles","Services remain available"), copy:bilingual("Livraisons, aide à domicile et consultations continuent dans le respect du protocole sanitaire du secteur A-17.","Deliveries, home care and consultations continue under sector A-17 health protocol.") },
+  { kind:"ad", date:"PUBLICITÉ", title:bilingual("PARIS-NORD FIBRE","PARIS-NORTH FIBRE"), lead:bilingual("Le monde arrive chez vous","The world comes to you"), copy:bilingual("Installation gratuite jusqu’au 31 octobre. Nos techniciens agréés interviennent avec une carte officielle de maintenance.","Free installation until 31 October. Our approved technicians carry an official maintenance card.") },
+  { kind:"credits", date:"COURRIER DES LECTEURS", title:bilingual("Vos lettres","Your letters"), lead:bilingual("Merci à nos lecteurs fidèles","Thank you to our loyal readers"), copy:bilingual("Ce numéro a été archivé par Marianne Dumas pour M. André Vasseur, bénéficiaire du service d’aide à domicile A-17.","This issue was archived by Marianne Dumas for Mr André Vasseur, beneficiary of A-17 home-care services.") }
+];
 
-export function createPuzzleSuite(ctx) {
-  const { state, save, createWindow, toast } = ctx;
-  state.puzzles ||= {};
-  state.fragments ||= [];
+export const emblemTarget = ["branch", "star", "tower", "wave", "eye", "hex"];
 
-  const complete = (id, message) => {
-    const firstCompletion = !state.puzzles[id];
-    state.puzzles[id] = true;
-    save();
-    if (message) toast(message);
-    if (firstCompletion) {
-      const lines = {
-        usb: "Ça y est. La clé s’ouvre… Voyons ce que quelqu’un a voulu cacher.",
-        photo: "Ah… cette photo a été prise chez André. Et les deux visages ont été anonymisés avant l’archivage.",
-        cipher: "D’accord… ce message ne donne pas une réponse, il donne une méthode.",
-        timeline: "19 h 41. Tout converge vers cette minute.",
-        audio: "A-17… encore ce même secteur. Ce n’est certainement pas une coïncidence.",
-        corrupt: "Une maintenance synchronisée… Ce mot n’a rien à faire dans un rapport de population.",
-        protected: "Cette archive était vraiment faite pour ne pas être ouverte. Restons prudents."
-      };
-      if (lines[id]) ctx.narrate?.(`puzzle-${id}`, lines[id]);
-    }
-  };
+export const videoArchive = [
+  { id:"street-1815", date:"18/10/2029", start:"18:54", label:bilingual("Rue des Saules — avant l’arrivée","Rue des Saules — before arrival"), relevant:false },
+  { id:"andre-1912", date:"18/10/2029", start:"19:12", label:bilingual("Maison Vasseur — entrée","Vasseur residence — entrance"), relevant:true },
+  { id:"street-2030", date:"18/10/2029", start:"20:30", label:bilingual("Rue des Saules — flux incomplet","Rue des Saules — incomplete feed"), relevant:false }
+];
 
-  function openUsbKeypad() {
-    const win = createWindow({
-      id: "usb-keypad",
-      title: "ARCHIVE_M (E:) — Accès sécurisé",
-      symbol: "▮",
-      size: "small keypad-window",
-      content: `<div class="keypad-app"><div class="keypad-led"><small>CODE À 4 CHIFFRES</small><output aria-live="polite">••••</output></div><p>Saisissez le code personnel du support.</p><div class="keypad-grid">${[1,2,3,4,5,6,7,8,9,"⌫",0,"↵"].map(key => `<button data-key="${key}">${key}</button>`).join("")}</div><div class="keypad-status">Lecteur verrouillé</div></div>`
-    });
-    let code = "";
-    let accepted = false;
-    const output = win.querySelector("output");
-    const status = win.querySelector(".keypad-status");
-    const render = () => output.textContent = code.padEnd(4, "•");
-    const submit = () => {
-      if (code === "2311" && !accepted) {
-        accepted = true;
-        state.usbUnlocked = true;
-        complete("usb", "Le lecteur E: est maintenant accessible.");
-        status.textContent = "Accès autorisé";
-        status.classList.add("ok");
-        window.removeEventListener("keydown", win._keyHandler);
-        win.remove();
-        ctx.syncTaskbar?.();
-        ctx.openExplorer("usb");
-      } else {
-        status.textContent = "Code refusé";
-        status.classList.remove("ok");
-        win.classList.add("shake");
-        setTimeout(() => win.classList.remove("shake"), 350);
-        code = "";
-        render();
-      }
-    };
-    const press = key => {
-      if (/^\d$/.test(key) && code.length < 4) code += key;
-      else if (key === "Backspace" || key === "⌫") code = code.slice(0, -1);
-      else if (key === "Enter" || key === "↵") submit();
-      render();
-    };
-    win.querySelectorAll("[data-key]").forEach(button => button.onclick = () => press(button.dataset.key));
-    win._keyHandler = event => {
-      if (!document.body.contains(win) || win.classList.contains("minimized") || !win.classList.contains("active")) return;
-      if (/^\d$/.test(event.key) || event.code.startsWith("Numpad") && /^Numpad\d$/.test(event.code)) press(event.key.match(/\d/)?.[0] || event.code.slice(-1));
-      else if (["Enter", "NumpadEnter", "Backspace"].includes(event.key) || event.code === "NumpadEnter") press(event.code === "NumpadEnter" ? "Enter" : event.key);
-    };
-    window.addEventListener("keydown", win._keyHandler);
-    win.addEventListener("windowclose", () => window.removeEventListener("keydown", win._keyHandler), { once: true });
-  }
-
-  function openPhotoPuzzle() {
-    const initial = state.photoOrder?.length === 12 ? state.photoOrder : PHOTO_ORDER.slice();
-    const initialRotations = state.photoRotations?.length === 12 ? state.photoRotations : PHOTO_ROTATIONS.slice();
-    const win = createWindow({ id: "puzzle-photo", title: "photo_recuperee.jpg — Reconstruction", symbol: "▧", size: "puzzle-wide", content: `<div class="puzzle-shell photo-puzzle"><header><span>ARCHIVE VISUELLE / 18 RUE DES SAULES</span><h2>Photographie déchirée</h2><p>Douze fragments ont été déplacés et tournés. Échangez-les puis corrigez leur orientation.</p></header><div class="photo-workbench"><div class="photo-grid" role="grid"></div><aside><strong>Table lumineuse</strong><p>Cliquez sur deux fragments pour les échanger. Sélectionnez-en un puis utilisez la rotation. Le cadre usé et les lignes de la pièce servent de repères.</p><button class="secondary photo-rotate">↻ Tourner le fragment</button><button class="secondary photo-reset">Recommencer</button><small class="photo-help">Les visages ont été anonymisés dans l’archive originale.</small><div class="puzzle-note"></div></aside></div></div>` });
-    let order = initial.slice(); let rotations = initialRotations.slice(); let selected = null;
-    const grid = win.querySelector(".photo-grid");
-    const note = win.querySelector(".puzzle-note");
-    const render = () => {
-      grid.classList.remove("complete");
-      grid.innerHTML = order.map((tile, position) => `<button class="photo-piece ${selected === position ? "selected" : ""}" draggable="true" data-position="${position}" data-tile="${tile}" aria-label="Fragment ${tile + 1}, rotation ${rotations[position] * 90} degrés"><span style="--col:${tile % 4};--row:${Math.floor(tile / 4)};--rotation:${rotations[position] * 90}deg"></span></button>`).join("");
-      grid.querySelectorAll(".photo-piece").forEach(piece => {
-        piece.ondragstart = e => e.dataTransfer.setData("text/plain", piece.dataset.position);
-        piece.ondragover = e => e.preventDefault();
-        piece.ondrop = e => { e.preventDefault(); swap(Number(e.dataTransfer.getData("text/plain")), Number(piece.dataset.position)); };
-        piece.onclick = () => {
-          const pos = Number(piece.dataset.position);
-          if (selected === null) {
-            selected = pos;
-            piece.classList.add("selected");
-          } else {
-            const from = selected;
-            selected = null;
-            swap(from, pos);
-          }
-        };
-      });
-      state.photoOrder = order; state.photoRotations = rotations; save();
-      if (order.every((tile, i) => tile === i) && rotations.every(value => value === 0)) {
-        complete("photo");
-        note.innerHTML = `<strong>Image restaurée.</strong><p>Le verso porte une mention au crayon : « André — 18, rue des Saules ».</p>`;
-        grid.classList.add("complete");
-      }
-    };
-    const swap = (a, b) => { [order[a], order[b]] = [order[b], order[a]]; [rotations[a], rotations[b]] = [rotations[b], rotations[a]]; render(); };
-    win.querySelector(".photo-rotate").onclick = () => { if (selected === null) { note.textContent = "Sélectionnez d’abord un fragment."; return; } rotations[selected] = (rotations[selected] + 1) % 4; render(); };
-    win.querySelector(".photo-reset").onclick = () => { order = PHOTO_ORDER.slice(); rotations = PHOTO_ROTATIONS.slice(); selected = null; note.textContent = ""; render(); };
-    ctx.narrate?.("photo-open", "Cette image est plus abîmée que prévu… Les fragments ont aussi été tournés. Le cadre et l’horloge devraient m’aider.");
-    render();
-  }
-
-  const cipherText = "OH UHJLVWUH D17 HVW VHUYLFH D 03K00. PRW GH SDVVH: QRP GH UXH + VHFWHXU.";
-  const decode = (input, shift) => input.replace(/[A-Z]/g, char => String.fromCharCode((char.charCodeAt(0) - 65 - shift + 26) % 26 + 65));
-  function openCipherPuzzle() {
-    const win = createWindow({ id: "puzzle-cipher", title: "message_intercepte.enc", symbol: "⌁", size: "puzzle-wide", content: `<div class="puzzle-shell cipher-puzzle"><header><span>OUTIL DE DÉCHIFFREMENT LOCAL</span><h2>Message intercepté</h2><p>La fiche « ROTATION.txt » décrit le principe utilisé par l’auteur.</p></header><div class="cipher-card"><label>Message chiffré</label><div class="cipher-source">${cipherText}</div><label for="shift-range">Décalage alphabétique : <b class="shift-value">0</b></label><input id="shift-range" type="range" min="0" max="25" value="0"><label>Résultat</label><div class="cipher-result"></div><button class="primary cipher-accept">Archiver le résultat lisible</button><div class="puzzle-note"></div></div></div>` });
-    const range = win.querySelector("input"); const result = win.querySelector(".cipher-result"); const note = win.querySelector(".puzzle-note");
-    const render = () => { win.querySelector(".shift-value").textContent = range.value; result.textContent = decode(cipherText, Number(range.value)); };
-    range.oninput = render;
-    win.querySelector(".cipher-accept").onclick = () => {
-      if (Number(range.value) === 3) { complete("cipher"); note.innerHTML = `<strong>Texte cohérent archivé.</strong><p>La combinaison demandée est le nom de la rue d’André suivi du numéro de secteur.</p>`; }
-      else note.textContent = "Le texte reste incohérent.";
-    };
-    render();
-  }
-
-  function openDifferencesPuzzle() {
-    const spots = [{ id:"door", x:11, y:58, label:"Numéro de porte modifié" },{ id:"camera", x:50, y:15, label:"Caméra ajoutée" },{ id:"lamp", x:76, y:45, label:"Fenêtre active" },{ id:"cabinet", x:89, y:70, label:"Armoire technique ouverte" }];
-    const found = new Set(state.differences || []);
-    const win = createWindow({ id:"puzzle-differences", title:"comparateur_A17.exe", symbol:"◫", size:"puzzle-xl", content:`<div class="puzzle-shell differences-puzzle"><header><span>CAMÉRAS MUNICIPALES / MÊME CADRAGE</span><h2>Comparer les prises de vue</h2><p>Cliquez sur les anomalies de la vue du 18 octobre.</p></header><div class="compare-grid"><figure><img src="assets/neighborhood.jpg" alt="Quartier le 17 octobre"><figcaption>17 OCT. · 18:40</figcaption></figure><figure class="changed-photo"><img src="assets/neighborhood.jpg" alt="Quartier le 18 octobre"><span class="visual-change camera-change"></span><span class="visual-change lamp-change"></span><span class="visual-change cabinet-change"></span><span class="visual-change door-change">17</span>${spots.map(s=>`<button class="difference-spot ${found.has(s.id)?"found":""}" data-id="${s.id}" style="left:${s.x}%;top:${s.y}%" aria-label="Signaler une différence"></button>`).join("")}<figcaption>18 OCT. · 18:40</figcaption></figure></div><div class="puzzle-note"></div></div>` });
-    const note = win.querySelector(".puzzle-note");
-    win.querySelectorAll(".difference-spot").forEach(button => button.onclick = () => {
-      found.add(button.dataset.id); button.classList.add("found"); state.differences = [...found]; save();
-      if (found.size === spots.length) { complete("differences"); note.innerHTML = `<strong>Comparaison terminée.</strong><p>Les quatre anomalies sont concentrées autour du réseau autonome A-17.</p>`; }
-    });
-    if (found.size === spots.length) note.innerHTML = `<strong>Comparaison terminée.</strong><p>Les quatre anomalies sont concentrées autour du réseau autonome A-17.</p>`;
-  }
-
-  function openTimelinePuzzle() {
-    const events = {
-      arrival: ["18:57:03", "Marianne ouvre la porte avec son badge."],
-      query: ["19:31:08", "Une requête vers l’extérieur est bloquée."],
-      argument: ["19:39:44", "Deux voix sont détectées dans le salon."],
-      impact: ["19:40:52", "Un choc de 84 dB est enregistré."],
-      silence: ["19:41:06", "Le bracelet de Marianne cesse d’émettre."]
-    };
-    let order = state.timelineOrder || ["impact","arrival","silence","query","argument"];
-    const win = createWindow({ id:"puzzle-timeline", title:"reconstitution.chr", symbol:"◷", size:"puzzle-wide", content:`<div class="puzzle-shell timeline-puzzle"><header><span>CORRÉLATION DES HORODATAGES</span><h2>Reconstituer les dernières minutes</h2><p>Glissez les événements ou utilisez les flèches.</p></header><div class="timeline-list"></div><button class="primary timeline-check">Comparer aux horodatages</button><div class="puzzle-note"></div></div>` });
-    const list = win.querySelector(".timeline-list"); const note = win.querySelector(".puzzle-note");
-    const render = () => {
-      list.innerHTML = order.map((id,index)=>`<article class="timeline-card" draggable="true" data-id="${id}" data-index="${index}"><span class="drag-handle">⠿</span><div><time>${events[id][0]}</time><p>${events[id][1]}</p></div><span><button data-move="-1" aria-label="Monter">↑</button><button data-move="1" aria-label="Descendre">↓</button></span></article>`).join("");
-      list.querySelectorAll(".timeline-card").forEach(card => {
-        card.ondragstart=e=>e.dataTransfer.setData("text/plain",card.dataset.index); card.ondragover=e=>e.preventDefault(); card.ondrop=e=>{e.preventDefault(); const from=Number(e.dataTransfer.getData("text/plain")),to=Number(card.dataset.index); const [item]=order.splice(from,1);order.splice(to,0,item);render();};
-        card.querySelectorAll("[data-move]").forEach(button=>button.onclick=()=>{const from=Number(card.dataset.index),to=Math.max(0,Math.min(order.length-1,from+Number(button.dataset.move)));[order[from],order[to]]=[order[to],order[from]];render();});
-      }); state.timelineOrder=order; save();
-    };
-    win.querySelector(".timeline-check").onclick=()=>{if(order.every((id,i)=>id===CHRONOLOGY[i])){complete("timeline");note.innerHTML=`<strong>Chronologie cohérente.</strong><p>L’arrêt du bracelet intervient à 19:41, après le choc et sans appel sortant.</p>`;}else note.textContent="Au moins un horodatage est encore déplacé.";};
-    render();
-  }
-
-  function openAudioPuzzle() {
-    const win = createWindow({ id:"puzzle-audio", title:"salon_canal_B.wav", symbol:"♪", size:"puzzle-wide", content:`<div class="puzzle-shell audio-puzzle"><header><span>ENREGISTREMENT / CANAL SECONDAIRE</span><h2>Analyse audio</h2><p>Le son utile est masqué par le ronflement électrique. La table Morse se trouve dans les archives.</p></header><div class="waveform">${Array.from({length:54},(_,i)=>`<i style="height:${18+((i*17)%52)}%"></i>`).join("")}</div><audio controls preload="metadata" src="assets/signal-a17.wav"></audio><div class="audio-tools"><button class="secondary isolate">Isoler 860 Hz</button><button class="secondary speed" data-speed="0.5">×0,5</button><button class="secondary speed" data-speed="1">×1</button><label>Indice entendu <input class="audio-answer" maxlength="8" placeholder="…"></label><button class="primary audio-check">Consigner</button></div><div class="puzzle-note"></div></div>` });
-    const audio=win.querySelector("audio"); const note=win.querySelector(".puzzle-note");
-    win.querySelectorAll(".speed").forEach(button=>button.onclick=()=>{audio.playbackRate=Number(button.dataset.speed);});
-    win.querySelector(".isolate").onclick=async()=>{ if(!win._audioCtx){const AudioCtx=window.AudioContext||window.webkitAudioContext;win._audioCtx=new AudioCtx();const source=win._audioCtx.createMediaElementSource(audio),filter=win._audioCtx.createBiquadFilter();filter.type="bandpass";filter.frequency.value=860;filter.Q.value=8;source.connect(filter).connect(win._audioCtx.destination);} await win._audioCtx.resume();win.classList.add("isolated");toast("Canal 860 Hz isolé.");};
-    win.querySelector(".audio-check").onclick=()=>{const answer=win.querySelector(".audio-answer").value.toUpperCase().replace(/[^A-Z0-9]/g,"");if(answer==="A17"){complete("audio");note.innerHTML=`<strong>Signal identifié : A-17.</strong><p>Le canal est lié au secteur du quartier.</p>`;}else note.textContent="La séquence ne correspond pas encore à la table Morse.";};
-  }
-
-  function collectFragment(id) {
-    if (!fragmentDefinitions[id] || state.fragments.includes(id)) return;
-    state.fragments.push(id); save(); toast(`${fragmentDefinitions[id].label} copié dans le restaurateur.`);
-  }
-
-  function openCorruptPuzzle() {
-    let order = state.corruptOrder || state.fragments.slice().sort(()=>.5-Math.random());
-    const win=createWindow({id:"puzzle-corrupt",title:"rapport_population.corrupt",symbol:"⚠",size:"puzzle-wide",content:`<div class="puzzle-shell corrupt-puzzle"><header><span>RESTAURATEUR DE FICHIERS</span><h2>Document fragmenté</h2><p>Quatre fragments se trouvent dans des dossiers différents de la clé.</p></header><div class="fragment-bank"></div><div class="corrupt-slots"></div><button class="primary corrupt-check">Reconstruire le document</button><div class="puzzle-note"></div></div>`});
-    const bank=win.querySelector(".fragment-bank"),slots=win.querySelector(".corrupt-slots"),note=win.querySelector(".puzzle-note");
-    const render=()=>{bank.innerHTML=`<strong>Fragments récupérés</strong><p>${state.fragments.length?state.fragments.map(id=>fragmentDefinitions[id].label).join(" · "):"Aucun fragment copié."}</p>`;order=order.filter(id=>state.fragments.includes(id));state.fragments.forEach(id=>{if(!order.includes(id))order.push(id);});slots.innerHTML=order.map((id,i)=>`<article draggable="true" data-index="${i}"><span>${i+1}</span>${escapeHtml(fragmentDefinitions[id].text)}</article>`).join("")||`<div class="empty-fragments">Explorez IDENTITES, CHRONOLOGIE et SECTEUR_A17.</div>`;slots.querySelectorAll("article").forEach(card=>{card.ondragstart=e=>e.dataTransfer.setData("text/plain",card.dataset.index);card.ondragover=e=>e.preventDefault();card.ondrop=e=>{e.preventDefault();const from=Number(e.dataTransfer.getData("text/plain")),to=Number(card.dataset.index);const[item]=order.splice(from,1);order.splice(to,0,item);render();};card.onclick=()=>{const i=Number(card.dataset.index),j=(i+1)%order.length;[order[i],order[j]]=[order[j],order[i]];render();};});state.corruptOrder=order;save();};
-    win.querySelector(".corrupt-check").onclick=()=>{if(state.fragments.length<4)note.textContent="Le document reste incomplet.";else if(order.every((id,i)=>id===CORRUPT_ORDER[i])){complete("corrupt");note.innerHTML=`<strong>Document restauré.</strong><p>« Les résidents du secteur partagent une architecture et reçoivent chaque nuit une maintenance synchronisée. »</p>`;}else note.textContent="Les raccords syntaxiques ne coïncident pas.";};render();
-  }
-
-  function openProtectedFolder() {
-    const win=createWindow({id:"protected-login",title:"ARCHIVE_CONTROLE — Authentification",symbol:"▣",size:"small",content:`<div class="protected-login"><div class="lock-emblem">▣</div><h2>Dossier protégé</h2><p>Convention interne : <strong>nom de rue + numéro de secteur</strong>, sans espace.</p><input type="password" autocomplete="off" placeholder="Mot de passe"><button class="primary">Ouvrir l’archive</button><div class="puzzle-note"></div></div>`});
-    const input=win.querySelector("input"),note=win.querySelector(".puzzle-note");const submit=()=>{const value=input.value.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Z0-9]/g,"");if(value==="SAULES17"){state.protectedUnlocked=true;complete("protected","Archive de contrôle déverrouillée.");win.dispatchEvent(new CustomEvent("windowclose"));win.remove();ctx.syncTaskbar?.();ctx.openExplorer("protected");}else{note.textContent="Authentification refusée.";input.select();}};win.querySelector("button.primary").onclick=submit;input.onkeydown=e=>{if(e.key==="Enter")submit();};input.focus();
-  }
-
-  return { openUsbKeypad, openPhotoPuzzle, openCipherPuzzle, openDifferencesPuzzle, openTimelinePuzzle, openAudioPuzzle, openCorruptPuzzle, openProtectedFolder, collectFragment };
-}
-
+export const reportFacts = [
+  { id:"marianne-ai", weight:8, terms:["marianne est une ia","marianne est artificielle","marianne est un robot","marianne is an ai","marianne is artificial","marianne is a robot"] },
+  { id:"andre-ai", weight:7, terms:["andre est une ia","andre est artificiel","andre est un robot","andre is an ai","andre is artificial","andre is a robot"] },
+  { id:"andre-killed", weight:12, terms:["andre a tue marianne","tuee par andre","andre est responsable de la mort","andre killed marianne","killed by andre","andre caused her death"] },
+  { id:"time", weight:8, terms:["19:41","19h41","19 h 41"] },
+  { id:"motive", weight:8, terms:["revelation de leur nature","refuse la verite","peur de la verite","revealed their nature","rejected the truth","fear of the truth"] },
+  { id:"population", weight:9, terms:["population artificielle","habitants sont des ia","quartier peuple d ia","artificial population","residents are ai","district populated by ai"] },
+  { id:"experiment", weight:9, terms:["experience gouvernementale","experimentation gouvernementale","quartier experimental","government experiment","experimental district"] },
+  { id:"isolation", weight:7, terms:["quarantaine","isolement","communications controlees","quarantine","isolation","communications controlled"] },
+  { id:"camera", weight:8, terms:["coupure volontaire","cameras volontairement coupees","gouvernement a coupe les cameras","intentional camera cut","government cut the cameras"] },
+  { id:"no-report", weight:6, terms:["aucun signalement","pas appele les autorites","deces non signale","no report","did not call authorities","death unreported","death was unreported"] },
+  { id:"body", weight:6, terms:["corps dissimule","cache le corps","corps non retrouve","hid the body","body was hidden","body not found"] },
+  { id:"flight", weight:6, terms:["andre a fui","andre prend la fuite","andre est en fuite","andre fled","andre escaped"] },
+  { id:"uncertainty", weight:6, terms:["lieu inconnu","raison inconnue","non revele","unknown location","reason unknown","reason is unknown","not revealed"] }
+];
