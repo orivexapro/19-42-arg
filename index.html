@@ -6,8 +6,10 @@
   <meta name="theme-color" content="#071520">
   <title>19:41 — Le dossier A-17</title>
   <meta name="description" content="Une enquête ARG rétro sur un ordinateur d’archives reconstitué.">
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="game.css?v=2.0.0">
+  <link rel="stylesheet" href="game.css?v=3.0.0">
+  <link rel="stylesheet" href="shell.css?v=3.0.0">
 </head>
 <body>
   <section id="intro" class="intro" aria-label="Introduction">
@@ -20,21 +22,25 @@
     <div class="wallpaper-grid"></div>
     <nav id="desktop-icons" class="desktop-icons" aria-label="Desktop applications"></nav>
     <section id="window-layer" class="window-layer"></section>
-    <aside id="objective" class="objective"></aside>
     <section id="start-menu" class="start-menu hidden" aria-label="Start menu">
-      <header><strong>ARCHIVE OS</strong><button id="lang-toggle" class="tiny">FR / EN</button></header>
+      <header><div><strong>ARCHIVE OS</strong><small>Recovery node A-17</small></div><button id="start-close" class="tiny" aria-label="Fermer">×</button></header>
+      <label class="start-search"><span>⌕</span><input id="start-search" type="search" placeholder="Rechercher applications et archives"></label>
+      <div class="start-heading"><span>Épinglé</span><small>Toutes les applications</small></div>
       <div id="start-apps" class="start-apps"></div>
-      <footer><span>SESSION A. MOREL</span><button id="reset" class="tiny">RESET</button></footer>
+      <div class="start-recommended"><small>RECOMMANDÉ</small><button id="replay-intro"><span>▶</span><b>Revoir l’introduction</b><em>Reconstitution 3D · Paris 2129</em></button></div>
+      <footer><span class="user-avatar">AM</span><b>SESSION A. MOREL</b><button id="reset" class="tiny">Réinitialiser</button></footer>
     </section>
     <footer class="taskbar">
       <button id="start" class="start-button" aria-label="Start"><span><i></i><i></i><i></i><i></i></span></button>
       <div id="running" class="running"></div>
-      <div class="tray"><button id="quick-settings" class="tray-button" aria-label="Paramètres rapides">⌁</button><button id="sound" class="tray-button" aria-label="Sound">🔊</button><span id="network-indicator">●</span><span id="clock"><b>19:41</b><small>18/10/2129</small></span></div>
+      <div class="tray"><button id="quick-settings" class="tray-button" aria-label="Paramètres rapides">⌁</button><button id="sound" class="tray-button" aria-label="Sound">🔊</button><span id="network-indicator">●</span><button id="language-indicator" class="language-indicator">FRA</button><span id="clock"><b>19:41</b><small>18/10/2129</small></span></div>
     </footer>
     <aside id="quick-panel" class="quick-panel hidden"></aside>
+    <aside id="language-panel" class="language-panel hidden" aria-label="Langue d’affichage"></aside>
+    <menu id="context-menu" class="context-menu hidden"></menu>
   </main>
   <div id="modal-root"></div>
   <div id="toast" class="toast" aria-live="polite"></div>
-  <script type="module" src="app.js?v=2.0.0"></script>
+  <script type="module" src="app.js?v=3.0.0"></script>
 </body>
 </html>

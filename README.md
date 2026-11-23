@@ -6,13 +6,13 @@ ARG narratif solo bilingue jouable dans le navigateur. En 2129, un journaliste u
 
 ## Expérience intégrée
 
-- introduction animée et transition immersive vers un bureau inspiré des systèmes modernes ;
+- introduction 3D Three.js (porte, marche, assise et passage en vue subjective), transition USB 3D et bureau inspiré des systèmes modernes ;
 - explorateur, bloc-notes sauvegardé, calculatrice, corbeille, paramètres rapides, Wi‑Fi, mode avion, barre des tâches et fenêtres persistantes ;
 - clé USB `2311`, sceau gouvernemental à reconstituer, matrice `2727`, restauration réseau et maintenance confidentielle ;
 - navigateur fictif à onglets et Cloud reconstitué sans accès au véritable Internet ;
 - magazine Télé Hebdomadaire de huit pages, feuilletable et zoomable ;
 - lecteur commun avec progression, volume, plein écran, retour, image par image, vitesse ×0,05 à ×2, amplification, luminosité et contraste ;
-- vidéos animées rétro : arrivée chez André, coupure volontaire, cuisine de Marianne, appel et objet perdu du technicien ;
+- vidéos 3D low-poly rétro : arrivée chez André, coupure volontaire, cuisine de Marianne, appel et objet perdu du technicien ;
 - atlas mondial caché après onze bascules du mode avion et dossier Honduras ;
 - rapport final local acceptant différentes formulations françaises et anglaises ;
 - sauvegarde LocalStorage, reprise de partie, aide immersive après inactivité et teaser 19:42 sans révélation réservée.
@@ -28,6 +28,8 @@ npm run check
 ```
 
 Le site est statique et déployé par GitHub Actions vers GitHub Pages.
+
+Le moteur Three.js est distribué localement sous licence MIT (`assets/vendor/THREE-LICENSE.txt`). Le fond d’écran ArchiveOS est une création originale produite pour ce projet.
 
 ## Commercialisation
 

@@ -4,9 +4,9 @@ import { readFileSync, existsSync } from "node:fs";
 import { archiveFiles, magazinePages, emblemTarget, USB_CODE, MATRIX_CODE, MAINTENANCE_CODE, NETWORK, videoArchive } from "../puzzles.js";
 
 const read=(name)=>readFileSync(new URL("../"+name,import.meta.url),"utf8");
-const app=read("app.js"),html=read("index.html"),css=read("game.css"),icons=read("icons.js");
+const app=read("app.js"),html=read("index.html"),css=read("game.css")+read("shell.css"),icons=read("icons.js"),cinematics=read("cinematics.js");
 
-test("le jeu démarre par une introduction animée",()=>{assert.match(html,/intro-canvas/);assert.match(app,/function runIntro/);assert.match(app,/requestAnimationFrame\(draw\)/)});
+test("le jeu démarre par une véritable introduction Three.js",()=>{assert.match(html,/intro-canvas/);assert.match(app,/function runIntro/);assert.match(cinematics,/THREE\.WebGLRenderer/);assert.match(cinematics,/requestAnimationFrame\(render\)/)});
 test("la cinématique propose plein écran et passage",()=>{assert.match(html,/fullscreen-intro/);assert.match(html,/skip-intro/);assert.match(app,/requestFullscreen/)});
 test("le code USB officiel est 2311 et 1141 a disparu",()=>{assert.equal(USB_CODE,"2311");assert.doesNotMatch(app+read("puzzles.js"),/1141/)});
 test("l’indice USB est le récit naturel du chat au 23 novembre 2024",()=>{assert.match(archiveFiles.catJournal.body.fr,/Le 23 novembre 2024.*petit chat abandonné/s);assert.doesNotMatch(archiveFiles.catJournal.body.fr,/mot de passe|code/i)});
@@ -35,7 +35,13 @@ test("la maintenance révèle l’arrêt à 19 h 41 sans secret de saison 2",()=
 test("fenêtres barre des tâches réduction restauration et sauvegarde existent",()=>{for(const token of ["createWindow","syncTaskbar","class='min'","class='maxi'","ResizeObserver","state.layouts"])assert.match(app,new RegExp(token))});
 test("calculatrice corbeille paramètres et bloc-notes sont fonctionnels",()=>{for(const fn of ["openCalculator","openTrash","openSettings","openNotes"])assert.match(app,new RegExp("function "+fn));assert.match(app,/state\.notes/)});
 test("les icônes sont de vrais SVG colorés",()=>{assert.match(icons,/<svg/);assert.match(icons,/#f1cc55/);assert.match(icons,/#89979f/);assert.match(icons,/#2d87d2/);assert.match(icons,/#4aa6e4/)});
-test("FR EN et progression persistent sans réinitialisation",()=>{assert.match(app,/state\.lang=state\.lang===/);assert.match(app,/localStorage/);assert.match(app,/STORAGE_KEY/)});
-test("les ressources locales de l’index existent",()=>{for(const name of ["styles.css","game.css","app.js"]){assert.equal(existsSync(new URL("../"+name,import.meta.url)),true)}assert.match(html,/game\.css\?v=2\.0\.0/)});
+test("FR EN et progression persistent sans réinitialisation",()=>{assert.match(app,/function setLanguage/);assert.match(app,/state\.lang=lang/);assert.match(app,/localStorage/);assert.match(app,/STORAGE_KEY/)});
+test("les ressources locales de l’index existent",()=>{for(const name of ["styles.css","game.css","shell.css","app.js","cinematics.js","assets\/vendor\/three.module.js"]){assert.equal(existsSync(new URL("../"+name,import.meta.url)),true)}assert.match(html,/game\.css\?v=3\.0\.0/)});
+test("le bureau respecte sélection, double clic, Entrée et menu contextuel",()=>{assert.match(app,/function selectable/);assert.match(app,/ondblclick/);assert.match(app,/e\.key===\"Enter\"/);assert.match(app,/showContextMenu/);assert.doesNotMatch(app,/app-icon.*e\.detail/s)});
+test("l’explorateur possède historique, recherche, barre d’adresse et vues",()=>{for(const token of ["explorer-toolbar","address-bar","explorer-search","ex-back","ex-forward","view-toggle"])assert.match(app,new RegExp(token))});
+test("la barre des tâches distingue actif et réduit avec aperçu",()=>{assert.match(app,/minimized-task/);assert.match(app,/task-preview/);assert.match(css,/task-app\.active/);assert.match(css,/task-app:hover \.task-preview/)});
+test("la reprise ne force pas la cinématique et permet de la revoir",()=>{assert.match(app,/state\.introSeen&&!force/);assert.match(html,/replay-intro/);assert.match(app,/runIntro\(true\)/)});
+test("le moteur 3D contient porte articulée, marche, assise et écran",()=>{for(const token of ["doorPivot\.rotation","stride","const sit","CanvasTexture","makeCharacter","buildRoom"])assert.match(cinematics,new RegExp(token.replace(".","\\.")))});
+test("les vidéos d’archives utilisent aussi des scènes Three.js",()=>{assert.match(app,/createArchiveScene\(canvas,id\)/);assert.match(cinematics,/export function createArchiveScene/);assert.match(cinematics,/lowPolyPerson/);assert.match(cinematics,/logo\.material\.opacity/)});
 test("aucune API payante ou dépendance distante n’est requise",()=>{assert.doesNotMatch(app+html,/openai|stripe|supabase|https:\/\/cdn|apiKey/i)});
 test("la configuration réseau est accessible avant le cloud",()=>{assert.match(app,/matrixUnlocked/);assert.match(app,/openDocument\("routerHistory"\)/);assert.match(app,/if\(!state\.network\)/)});
