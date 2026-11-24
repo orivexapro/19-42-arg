@@ -1,0 +1,10 @@
+hand-posable.glb
+
+Model: “Posable anatomical right hand”
+Source: Innerscene 3D Parts Library
+Original asset: MakeHuman / MPFB anatomical base
+License: CC0 1.0 Universal (public domain)
+Commercial use, modification and redistribution are permitted without attribution.
+
+Source page:
+https://www.innerscene.com/tools/library/3d-parts/posable-anatomical-right-hand-f6098b4f
