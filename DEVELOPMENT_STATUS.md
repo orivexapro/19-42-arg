@@ -1,6 +1,6 @@
 # État du développement — 19:41
 
-Dernière mise à jour : 24 novembre 2026 — correction prioritaire validée
+Dernière mise à jour : 24 novembre 2026 — préproduction Blender en attente de validation
 Branche de production : `main`
 Version de référence précédente : `9436e8c` — `feat: render archive footage in 3d and document status`
 
@@ -10,6 +10,16 @@ Version de référence précédente : `9436e8c` — `feat: render archive footag
 - Correctif appliqué : le calque de fenêtres ignore désormais les événements, tandis que ses fenêtres enfants les reçoivent normalement.
 - Correction validée dans Chrome avec de véritables entrées souris : sélection simple, double-clic, Entrée, déplacement, réduction, restauration, maximisation, fermeture et coexistence de plusieurs fenêtres.
 - Aucun calque de cinématique, canvas WebGL ou élément transparent ne reste dans la chaîne de ciblage après la transition.
+
+## Préproduction Blender — en attente de validation
+
+- Blender 5.2.2 LTS portable vérifié sur la RTX 3060 12 Go.
+- Scène source `assets/cinematic/blender/19-41_intro_preview.blend` construite et ressources emballées.
+- Quatre rendus Blender 1440 × 810 produits : main/poignée, pièce blanche, fenêtre/Paris et vue assise.
+- Lampe, bureau et fauteuil Poly Haven CC0 intégrés ; Marble020 ambientCG CC0 adapté à 3 % ; main anatomique CC0 intégrée.
+- La référence TurboSquid 1480337 reste exclue : fiche bloquée par anti-robot et gratuité non vérifiable. Un ordinateur proxy explicitement nommé est présent uniquement pour valider le cadrage.
+- `ART_DIRECTION.md`, `ASSET_LIBRARY.md`, `CINEMATIC_STANDARDS.md` et `AGENTS.md` définissent désormais les règles permanentes.
+- Aucun rendu vidéo ni remplacement de la cinématique publiée n’a été effectué avant validation.
 
 ## Phase 1 — Interface informatique : terminée et revalidée
 

@@ -3,3 +3,5 @@ node_modules/
 .vercel/
 
 qa-v3-artifacts/
+*.blend1
+assets/cinematic/source_assets/ambientcg/Marble020/*.zip
