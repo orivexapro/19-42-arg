@@ -5,3 +5,5 @@ node_modules/
 qa-v3-artifacts/
 *.blend1
 assets/cinematic/source_assets/ambientcg/Marble020/*.zip
+assets/cinematic/previews/frames_480p/
+assets/cinematic/previews/qa_animation/

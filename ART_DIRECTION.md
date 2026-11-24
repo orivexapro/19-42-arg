@@ -30,6 +30,7 @@ Cette scène possède une direction spécifique qui ne doit pas être imposée a
 - Plusieurs foyers orange et colonnes de fumée sont visibles entre les immeubles.
 - La ville ne doit jamais être montrée comme entièrement détruite, désertique ou réduite à des ruines.
 - Le contraste principal oppose l’intérieur blanc et calme à l’extérieur bleu-noir et incendié.
+- Le panorama permanent est l’image originale `assets/cinematic/source_assets/generated/paris_apocalypse_panorama.png` : toits haussmanniens, tour Eiffel identifiable, foyers dispersés et fumées. Les formes urbaines procédurales provisoires ne doivent pas être réintroduites.
 
 ## Caméra et composition
 
@@ -49,4 +50,4 @@ Avant toute vidéo complète, rendre et faire valider :
 3. Paris et les incendies depuis la fenêtre ;
 4. la vue assise devant l’ordinateur.
 
-La vidéo WebM ne peut être lancée qu’après validation explicite de ces quatre images.
+La validation technique des quatre cadrages a été reçue le 24 novembre 2026. Une copie de travail 480p/24 i/s peut être rendue pour revue ; elle ne remplace pas la cinématique publique avant validation visuelle explicite.

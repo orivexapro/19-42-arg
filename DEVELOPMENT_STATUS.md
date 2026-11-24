@@ -1,6 +1,6 @@
 # État du développement — 19:41
 
-Dernière mise à jour : 24 novembre 2026 — préproduction Blender en attente de validation
+Dernière mise à jour : 24 novembre 2026 — prévisualisation Blender 480p prête pour validation
 Branche de production : `main`
 Version de référence précédente : `9436e8c` — `feat: render archive footage in 3d and document status`
 
@@ -11,7 +11,7 @@ Version de référence précédente : `9436e8c` — `feat: render archive footag
 - Correction validée dans Chrome avec de véritables entrées souris : sélection simple, double-clic, Entrée, déplacement, réduction, restauration, maximisation, fermeture et coexistence de plusieurs fenêtres.
 - Aucun calque de cinématique, canvas WebGL ou élément transparent ne reste dans la chaîne de ciblage après la transition.
 
-## Préproduction Blender — en attente de validation
+## Prévisualisation Blender — prête pour validation
 
 - Blender 5.2.2 LTS portable vérifié sur la RTX 3060 12 Go.
 - Scène source `assets/cinematic/blender/19-41_intro_preview.blend` construite et ressources emballées.
@@ -19,7 +19,14 @@ Version de référence précédente : `9436e8c` — `feat: render archive footag
 - Lampe, bureau et fauteuil Poly Haven CC0 intégrés ; Marble020 ambientCG CC0 adapté à 3 % ; main anatomique CC0 intégrée.
 - La référence TurboSquid 1480337 reste exclue : fiche bloquée par anti-robot et gratuité non vérifiable. Un ordinateur proxy explicitement nommé est présent uniquement pour valider le cadrage.
 - `ART_DIRECTION.md`, `ASSET_LIBRARY.md`, `CINEMATIC_STANDARDS.md` et `AGENTS.md` définissent désormais les règles permanentes.
-- Aucun rendu vidéo ni remplacement de la cinématique publiée n’a été effectué avant validation.
+- Les quatre cadrages fixes ont été validés comme base technique et mobilier ; la qualité graphique doit encore être relevée avant validation finale.
+- Un panorama parisien apocalyptique original a été produit et sauvegardé dans `assets/cinematic/source_assets/generated/paris_apocalypse_panorama.png` : Paris identifiable, ville intacte, foyers dispersés et fumées, sans texte ni marque.
+- La scène Blender existante a été conservée et prolongée dans `assets/cinematic/blender/19-41_intro_animation_preview.blend`.
+- Le proxy d’ordinateur non vérifié a été supprimé et remplacé par le laptop Innerscene CC0 à échelle réelle.
+- Poignée longue, doigts riggés, ouverture de porte, caméra subjective, regard vers Paris, déplacement du fauteuil, assise, allumage et raccord écran sont animés sur 336 images.
+- Quatre enregistrements CC0 sont synchronisés : porte/poignée, pas, fauteuil et démarrage informatique.
+- La copie de revue `assets/cinematic/previews/19-41_intro_preview_480p.mp4` est terminée : 854 × 480, 24 i/s, 14,00 s, H.264 + AAC, 1 970 427 octets.
+- La cinématique publique et la direction artistique du faux Windows restent inchangées.
 
 ## Phase 1 — Interface informatique : terminée et revalidée
 
@@ -71,6 +78,11 @@ Fichiers principaux : `puzzles.js`, `evaluator.js`, `app.js`, `game.css`, `shell
 - Parcours navigateur public complet : introduction, bureau, Explorateur, USB, sceau, matrice, réseau, Cloud, magazine, CCTV 3D, scènes secondaires, maintenance, onze clics, Honduras et rapport final **100 %**.
 - GitHub Pages : workflow **Deploy to GitHub Pages #10** réussi pour `669ae4b`.
 - URL publique contrôlée : `https://orivexapro.github.io/19-42-arg/`.
+- Contrôle Blender de huit images de contact : poignée, prise, porte ouverte, fenêtre/Paris, fauteuil, assise, ordinateur et raccord écran.
+- Décodage intégral de la prévisualisation par FFmpeg : réussi sans erreur.
+- `ffprobe` : durée 14,000 s ; vidéo H.264 854 × 480 à 24 i/s ; audio AAC mono 48 kHz.
+- Décodage de la scène sauvegardée par Blender 5.2.2 : 336 images, 854 × 480, 24 i/s, 62 objets.
+- Suite automatisée du jeu après ajout des sources Blender : **45/45 tests réussis** ; aucun fichier du faux Windows ou de la logique de jeu n’a été modifié.
 
 ## Décisions techniques
 
@@ -88,4 +100,4 @@ Fichiers principaux : `puzzles.js`, `evaluator.js`, `app.js`, `game.css`, `shell
 
 ## Prochaine action précise
 
-Après publication, surveiller les retours de confort sur la durée de l’introduction et conserver en priorité la stabilité du bureau et du parcours d’enquête.
+Faire valider la copie de revue 480p par l’utilisateur. Après validation seulement, produire le master WebM/Opus et remplacer l’ancienne cinématique publique sans modifier le faux Windows.

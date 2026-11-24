@@ -16,10 +16,10 @@
 - Blender : 5.2.2 LTS ou version LTS compatible.
 - Moteur de prévisualisation : Eevee.
 - Gestion colorimétrique : AgX, contraste moyen-haut.
-- Cadence : 30 images/seconde.
-- Timeline cible : 450 images, soit 15 secondes.
+- Cadence finale de référence : 30 images/seconde.
+- Copie de revue économique autorisée : 24 images/seconde, 336 images, soit 14 secondes en 854 × 480.
 - Prévisualisations : PNG 1440 × 810.
-- Format final prévu après validation : WebM VP9, audio Opus, dimensions adaptées au navigateur.
+- Format de revue : MP4 H.264/AAC local. Format final prévu après validation : WebM VP9, audio Opus, dimensions adaptées au navigateur.
 - Tous les chemins doivent être relatifs ou les ressources emballées dans le `.blend`.
 - Les sources Blender et scripts reproductibles doivent être conservés.
 
