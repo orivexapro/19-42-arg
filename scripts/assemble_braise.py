@@ -8,6 +8,7 @@ CINE = ROOT / "assets/cinematic"
 parser = argparse.ArgumentParser()
 parser.add_argument("output", type=Path, help="MP4 review destination")
 parser.add_argument("--sound-only", action="store_true")
+parser.add_argument("--revision", choices=("r03","r04","r05"), default="r03")
 args = parser.parse_args()
 args.output.parent.mkdir(exist_ok=True, parents=True)
 audio_dir = CINE / "audio"
@@ -48,7 +49,7 @@ filters.append("".join(f"[a{i}]" for i in range(len(cues))) +
                f"amix=inputs={len(cues)}:normalize=0,alimiter=limit=0.93:level=0:latency=1,apad=whole_dur=16[mix]")
 subprocess.run(command + ["-filter_complex", ";".join(filters), "-map", "[mix]", "-t", "16", "-c:a", "pcm_s24le", str(mix)], check=True)
 if not args.sound_only:
-    frames = CINE / "braise-r03"
+    frames = CINE / ("braise-" + args.revision)
     for frame in range(1, 481):
         if not (frames / f"f_{frame:04d}.png").is_file():
             raise FileNotFoundError(f"Missing Blender frame {frame}")

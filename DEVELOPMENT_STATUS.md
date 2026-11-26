@@ -8,6 +8,10 @@ Scène actuelle dans `assets/cinematic/blender/19-41_braise_r03.blend`. Biblioth
 
 Contrôles en cours sur les images 28–52, 196–226, 351–372 et 480. Prochain geste : contrôler leur lecture puis compléter les PNG 1–480 dans `assets/cinematic/braise-r03/`. Les scripts de la branche permettent de réassembler le film. Les PNG et les copies de revue restent dans le dossier Documents de production.
 
+**Point de reprise R05.** Le commit 7ff656c est vérifié sur la branche de développement. Dans R04, les écarts mesurés de 4,9 à 6,3 mm à la prise ont été corrigés sur les maillages déformés. Le contrôle au maintien trouve 0,15 mm sur la poignée, le fauteuil et le bouton. Sur 480 positions de caméra, la distance minimale à la porte est de 23,2 cm, au fauteuil de 52,4 cm et à la table de 32,7 cm. Cette mesure porte sur les yeux. R05 reprend les gestes de R04 et remplace la jonction verticale du mur par un tableau continu. Cinq zones de fumée et de flammes suivent les foyers du panorama. La bibliothèque de huit collections a été réimportée avec succès ; toutes les textures de la scène sont emballées.
+
+Scène de revue : `assets/cinematic/blender/19-41_braise_r05.blend`. Images finales dans `assets/cinematic/braise-r05/`. Rendu en cours ; la dernière action après génération du film est le contrôle de lecture et de l’archive. Reprendre le rendu avec Blender en arrière-plan sur cette scène, option -a. Les paramètres enregistrés conservent les PNG existants. Assembler avec `python scripts/assemble_braise.py film.mp4 --revision r05` (FFmpeg dans le PATH). Les étapes précédentes sont conservées pour diagnostic.
+
 ## Historique du 24 novembre
 
 Dernière mise à jour : 24 novembre 2026 — prévisualisation Blender 480p prête pour validation
