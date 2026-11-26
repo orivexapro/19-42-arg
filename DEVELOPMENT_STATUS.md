@@ -2,7 +2,13 @@
 
 ## Reprise du 26 novembre — branche dev/cinematique-paris-30fps
 
-Base GitHub vérifiée cb49d98. La copie 24 i/s est une archive de travail rejetée artistiquement. Nouvelle palette, références privées, règles et panorama original sauvegardés. Scène source animée disponible dans assets/cinematic/blender. Prochaine étape : tester les contacts et les cadrages dans une scène sœur à 30 i/s. Historique antérieur ci-dessous.
+La branche part de cb49d98. Le commit d5b8379 conserve les références écrites et le nouveau panorama. La révision R01 a servi à repérer un reflet sur la dalle, une flexion inversée des doigts et une prise sous le rail du fauteuil. R02 corrige la flexion et place la main au-dessus du rail mesuré à 57,8 cm. R03 ajuste l'appui sur la pulpe de l'index, ajoute le témoin d'alimentation et prolonge la manche.
+
+Scène actuelle dans `assets/cinematic/blender/19-41_braise_r03.blend`. Bibliothèque dans le même dossier. Les deux révisions de contrôle sont conservées. La capture du véritable bureau, le panorama et les matériaux sont emballés. Le mix stéréo et les six enregistrements utilisés sont dans `assets/cinematic/audio/`. La production est indépendante du site.
+
+Contrôles en cours sur les images 28–52, 196–226, 351–372 et 480. Prochain geste : contrôler leur lecture puis compléter les PNG 1–480 dans `assets/cinematic/braise-r03/`. Les scripts de la branche permettent de réassembler le film. Les PNG et les copies de revue restent dans le dossier Documents de production.
+
+## Historique du 24 novembre
 
 Dernière mise à jour : 24 novembre 2026 — prévisualisation Blender 480p prête pour validation
 Branche de production : `main`

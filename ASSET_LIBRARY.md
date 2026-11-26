@@ -49,4 +49,14 @@ Les fichiers utilisés sont les aperçus haute qualité officiels de Freesound, 
 - `scripts/download_cinematic_assets.ps1` : récupération reproductible des ressources CC0.
 - `scripts/build_blender_previews.py` : reconstruction et rendu des prévisualisations.
 
-Une ambiance urbaine extérieure dédiée pourra encore être ajoutée après retour sur la copie de revue. Les quatre actions principales utilisent déjà des enregistrements CC0 documentés.
+## Copie de revue Braise à 30 i/s
+
+Le moteur, le clic et le feu proviennent de trois prises supplémentaires sous CC0. Le mix utilise réellement ces enregistrements et les prises de porte, de pas et de fauteuil ci-dessus. La prise industrielle Zeraora reste réservée à l’archive 24 i/s.
+
+| Prise | Auteur et source | Utilisation |
+|---|---|---|
+| boot286.mp3 | [facuarmo, Freesound 482270](https://freesound.org/people/facuarmo/sounds/482270/) | Mise en route du PC |
+| power-click.mp3 | [ccovi, Freesound 718693](https://freesound.org/people/ccovi/sounds/718693/) | Pression de l’index |
+| exterior-embers.mp3 | [KVV_Audio, Freesound 714776](https://freesound.org/people/KVV_Audio/sounds/714776/) | Feu extérieur, passe-bas et position latérale |
+
+La bibliothèque 19-41_bibliotheque_braise.blend contient huit collections réutilisables avec leurs enfants, matériaux et animations. Ajouter par collection dans Blender. Les prises et actions proviennent d’une copie de revue en attente de validation artistique.
