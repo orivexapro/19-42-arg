@@ -16,6 +16,8 @@
 
 **Reconstruction en cas de besoin.** Utiliser `python scripts/assemble_braise.py film.mp4 --revision r05` depuis le dépôt avec FFmpeg installé. Contrôler la lecture avec `node scripts/check_review_video.mjs film.mp4`. En cas de PNG réellement manquant, ouvrir la scène R05 dans Blender 5.2.2 et rendre les seuls numéros concernés.
 
+**Sauvegarde contrôlée.** Le ZIP `19-41_Production_R05.zip` contient 1 685 entrées et pèse 1 003 601 868 octets. Il inclut les sources au commit b89130f, les modèles et textures, les cinq révisions Blender, les scripts, les documents, les sons, les séquences numérotées et les vidéos intermédiaires et finale. La vidéo se trouve dans `revue/` à l’intérieur du ZIP. La lecture intégrale de l’archive a validé les CRC. Les empreintes de la scène R05 et du MP4 extraits correspondent aux originaux. ZIP et MP4 existent dans le dossier local `outputs/` et dans `OneDrive/Documents/19-41-production/`, avec empreintes identiques entre les deux emplacements. SHA-256 du ZIP : `5952d280c98873fe0db9ac6ac1bcbe593c5e0295ec70ba69dccda103434faaa6`. La vérification porte sur les fichiers locaux du dossier OneDrive. La confirmation de synchronisation distante reste indépendante.
+
 ## Historique du 24 novembre
 
 Dernière mise à jour : 24 novembre 2026 — prévisualisation Blender 480p prête pour validation
