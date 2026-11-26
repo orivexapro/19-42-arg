@@ -1,17 +1,3 @@
-# Instructions du dépôt 19:41
+# Travail cinématographique
 
-Avant toute création ou modification de cinématique, lire intégralement :
-
-1. `ART_DIRECTION.md`
-2. `ASSET_LIBRARY.md`
-3. `CINEMATIC_STANDARDS.md`
-
-Ces documents sont obligatoires et priment pour la direction artistique, le choix des ressources, les licences, Blender, l’animation, le son, la validation et l’intégration web.
-
-Ne jamais :
-
-- produire une vidéo complète avant validation explicite des quatre prévisualisations ;
-- utiliser un asset payant, à licence incertaine ou non documentée ;
-- remplacer une scène Blender par une approximation en primitives JavaScript ;
-- modifier la direction artistique du faux Windows dans le cadre d’un travail limité aux cinématiques ;
-- toucher à un autre dépôt.
+Lire intégralement ART_DIRECTION.md, ASSET_LIBRARY.md, CINEMATIC_STANDARDS.md et DEVELOPMENT_STATUS.md avant de créer ou modifier une cinématique. Utiliser une branche de développement et des fichiers Blender versionnés. Conserver les cinq références privées hors Git et hors des fichiers Blender distribués. Contrôler les trois gestes avant la séquence entière. Seule la validation de la vidéo par le propriétaire autorise son intégration au jeu.

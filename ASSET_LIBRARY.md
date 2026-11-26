@@ -1,5 +1,9 @@
 # Bibliothèque de ressources — 19:41
 
+## Révision du 26 novembre
+
+Les cinq images fournies servent uniquement à la direction artistique, en consultation privée. Le panorama de production original est `assets/cinematic/source_assets/generated/paris-braise.png`, généré avec l'outil intégré sur description textuelle. Les modèles Poly Haven et Innerscene ci-dessous sont conservés. L'ancien effet de démarrage de Zeraora est un traitement de données numériques, pas une prise de son de machine.
+
 Toutes les ressources doivent être locales au moment du rendu et compatibles avec une exploitation commerciale. Aucun achat ne doit être déclenché.
 
 ## Ressources validées

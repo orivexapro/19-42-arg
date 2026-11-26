@@ -1,5 +1,9 @@
 # État du développement — 19:41
 
+## Reprise du 26 novembre — branche dev/cinematique-paris-30fps
+
+Base GitHub vérifiée cb49d98. La copie 24 i/s est une archive de travail rejetée artistiquement. Nouvelle palette, références privées, règles et panorama original sauvegardés. Scène source animée disponible dans assets/cinematic/blender. Prochaine étape : tester les contacts et les cadrages dans une scène sœur à 30 i/s. Historique antérieur ci-dessous.
+
 Dernière mise à jour : 24 novembre 2026 — prévisualisation Blender 480p prête pour validation
 Branche de production : `main`
 Version de référence précédente : `9436e8c` — `feat: render archive footage in 3d and document status`
